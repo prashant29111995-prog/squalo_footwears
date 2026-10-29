@@ -1,0 +1,355 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  style.
+    .party-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+    .party-title h3{margin:0;font-weight:900;color:#2c2e3e}
+    .party-title small{color:#8a90a5}
+    .action-row{display:flex;gap:8px;flex-wrap:wrap}
+    .dash-card{border:1px solid #edf0f7;border-radius:14px;background:#fff;padding:16px;margin-bottom:16px;box-shadow:0 8px 24px rgba(31,45,61,.04)}
+    .metric-card{border:1px solid #edf0f7;border-radius:14px;background:#fbfcff;padding:16px;min-height:106px;position:relative;overflow:hidden}
+    .metric-card:after{content:"";position:absolute;right:-24px;top:-24px;width:78px;height:78px;border-radius:50%;background:rgba(93,120,255,.07)}
+    .metric-label{font-size:11px;color:#74788d;text-transform:uppercase;font-weight:800;letter-spacing:.4px;margin-bottom:9px}
+    .metric-value{font-size:24px;font-weight:900;color:#2c2e3e;line-height:1.1}
+    .metric-help{font-size:11px;color:#8a90a5;margin-top:6px}
+    .metric-blue .metric-value{color:#5d78ff}
+    .metric-red .metric-value{color:#ef4444}
+    .metric-green .metric-value{color:#10b981}
+    .metric-orange .metric-value{color:#f59e0b}
+    .party-info-grid label{font-size:12px;font-weight:700;color:#74788d}
+    .risk-chip{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800}
+    .risk-low{background:#e8fff3;color:#10b981}
+    .risk-medium{background:#fff4de;color:#f59e0b}
+    .risk-high{background:#ffe2e5;color:#ef4444}
+    .filter-box{border:1px solid #edf0f7;border-radius:14px;background:#f9fafc;padding:14px;margin-bottom:16px}
+    .nav-tabs .nav-link{font-weight:800}
+    table th{background:#f8f9fb;font-weight:900!important;white-space:nowrap}
+    table td{vertical-align:middle!important;white-space:nowrap}
+    .amount-debit{color:#ef4444;font-weight:900}
+    .amount-credit{color:#10b981;font-weight:900}
+    .balance-amt{font-weight:900;color:#2c2e3e}
+    .insight-list{margin:0;padding-left:18px;color:#4b5563}
+    .insight-list li{margin-bottom:8px}
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              input#partyId(type="hidden" value=partyId)
+
+              .party-head
+                .party-title
+                  h3#partyNameTitle Party Account
+                  small Complete ledger, payment, profit and credit-risk dashboard
+                .action-row
+                  a.btn.btn-outline-brand.btn-sm(href="/su/footwear/parties")
+                    i.la.la-arrow-left
+                    |  Back
+                  button#btnAddPayment.btn.btn-success.btn-sm(type="button", data-toggle="modal", data-target="#modalPayment")
+                    i.la.la-money
+                    |  Add Payment
+                  button#btnAdjustment.btn.btn-warning.btn-sm(type="button", data-toggle="modal", data-target="#modalAdjustment")
+                    i.la.la-sliders
+                    |  Adjustment
+                  button#btnPrintStatement.btn.btn-outline-dark.btn-sm(type="button")
+                    i.la.la-print
+                    |  Print Statement
+
+              // MAIN METRICS
+              .row.mb-3
+                .col-md-3
+                  .metric-card.metric-red
+                    .metric-label Outstanding
+                    .metric-value#stat_balance ₹0
+                    .metric-help Receivable from party
+
+                .col-md-3
+                  .metric-card.metric-blue
+                    .metric-label Total Sales
+                    .metric-value#stat_debit ₹0
+                    .metric-help Total billed amount
+
+                .col-md-3
+                  .metric-card.metric-green
+                    .metric-label Total Payments
+                    .metric-value#stat_credit ₹0
+                    .metric-help Cash/UPI/Bank received
+
+                .col-md-3
+                  .metric-card.metric-orange
+                    .metric-label Gross Profit
+                    .metric-value#stat_profit ₹0
+                    .metric-help 
+                      span#stat_profit_percent 0%
+                      |  margin
+
+              .row.mb-3
+                .col-md-3
+                  .metric-card
+                    .metric-label Total Bills
+                    .metric-value#stat_total_bills 0
+                    .metric-help Sales invoices created
+
+                .col-md-3
+                  .metric-card
+                    .metric-label Avg Bill Value
+                    .metric-value#stat_avg_bill ₹0
+                    .metric-help Billing strength
+
+                .col-md-3
+                  .metric-card
+                    .metric-label Last Sale
+                    .metric-value#stat_last_sale -
+                    .metric-help Days since last sale
+
+                .col-md-3
+                  .metric-card
+                    .metric-label Last Payment
+                    .metric-value#stat_last_payment -
+                    .metric-help Collection activity
+
+              // PARTY PROFILE + RISK
+              .row
+                .col-md-8
+                  .dash-card.party-info-grid
+                    h5.mb-3 Party Details
+                    .row
+                      .col-md-3
+                        label Party
+                        input#partyName.form-control(readonly)
+                      .col-md-3
+                        label Phone
+                        input#partyPhone.form-control(readonly)
+                      .col-md-3
+                        label Type
+                        input#partyType.form-control(readonly)
+                      .col-md-3
+                        label GSTIN
+                        input#partyGstin.form-control(readonly)
+
+                .col-md-4
+                  .dash-card
+                    h5.mb-3 Credit Risk
+                    div.mb-2
+                      span#creditRiskChip.risk-chip.risk-medium MEDIUM RISK
+                    ul.insight-list
+                      li#insight_payment_delay Payment delay not calculated
+                      li#insight_profitability Profitability not calculated
+                      li#insight_action Suggested action will appear here
+
+              // TABS
+              .dash-card
+                ul.nav.nav-tabs(role="tablist")
+                  li.nav-item
+                    a.nav-link.active(data-toggle="tab", href="#tabOverview", role="tab") Overview
+                  li.nav-item
+                    a.nav-link(data-toggle="tab", href="#tabLedger", role="tab") Ledger
+                  li.nav-item
+                    a.nav-link(data-toggle="tab", href="#tabBills", role="tab") Bills
+                  li.nav-item
+                    a.nav-link(data-toggle="tab", href="#tabPayments", role="tab") Payments
+                  li.nav-item
+                    a.nav-link(data-toggle="tab", href="#tabProducts", role="tab") Products
+
+                .tab-content.mt-4
+                  #tabOverview.tab-pane.active(role="tabpanel")
+                    .row
+                      .col-md-6
+                        .dash-card
+                          h5.mb-3 Business Behaviour
+                          table.table.table-bordered
+                            tbody
+                              tr
+                                th Buying Frequency
+                                td#overview_buying_frequency -
+                              tr
+                                th Payment Behaviour
+                                td#overview_payment_behaviour -
+                              tr
+                                th Best Month
+                                td#overview_best_month -
+                              tr
+                                th Credit Recommendation
+                                td#overview_credit_recommendation -
+
+                      .col-md-6
+                        .dash-card
+                          h5.mb-3 Important Questions
+                          ul.insight-list
+                            li How much total business has this party given?
+                            li How much payment is pending?
+                            li Is this party profitable or risky?
+                            li Which products does this party buy repeatedly?
+                            li Should more credit be allowed?
+
+                  #tabLedger.tab-pane(role="tabpanel")
+                    .filter-box
+                      .row.align-items-end
+                        .col-md-3
+                          label From
+                          input#filter_from.form-control(type="date")
+                        .col-md-3
+                          label To
+                          input#filter_to.form-control(type="date")
+                        .col-md-3
+                          label Type
+                          select#filter_type.form-control
+                            option(value="") All Types
+                            option(value="BILL") BILL
+                            option(value="PAYMENT") PAYMENT
+                            option(value="RETURN") RETURN
+                            option(value="ADJUSTMENT") ADJUSTMENT
+                        .col-md-3
+                          button#btnClear.btn.btn-outline-secondary.btn-block(type="button")
+                            i.la.la-undo
+                            |  Clear Filters
+
+                    .table-responsive
+                      table#ledgerTable.table.table-bordered.table-hover
+                        thead
+                          tr
+                            th Date
+                            th Type
+                            th Ref
+                            th Debit
+                            th Credit
+                            th Balance
+                            th Notes
+                            th Actions
+                        tbody
+                          tr
+                            td.text-center.text-muted(colspan="8") Loading...
+
+                  #tabBills.tab-pane(role="tabpanel")
+                    .table-responsive
+                      table#billsTable.table.table-bordered.table-hover
+                        thead
+                          tr
+                            th Date
+                            th Bill No
+                            th Status
+                            th Qty
+                            th Amount
+                            th Profit
+                            th Actions
+                        tbody
+                          tr
+                            td.text-center.text-muted(colspan="7") Loading...
+
+                  #tabPayments.tab-pane(role="tabpanel")
+                    .table-responsive
+                      table#paymentsTable.table.table-bordered.table-hover
+                        thead
+                          tr
+                            th Date
+                            th Mode
+                            th Amount
+                            th Ref No
+                            th Status
+                            th Notes
+                            th Actions
+                        tbody
+                          tr
+                            td.text-center.text-muted(colspan="7") Loading...
+
+                  #tabProducts.tab-pane(role="tabpanel")
+                    .table-responsive
+                      table#productsTable.table.table-bordered.table-hover
+                        thead
+                          tr
+                            th Article
+                            th Brand
+                            th Color
+                            th Qty Sold
+                            th Sales Value
+                            th Profit
+                            th Margin %
+                        tbody
+                          tr
+                            td.text-center.text-muted(colspan="7") Product analytics will load after bill data
+
+          include ../partials/footer.pug
+
+    // ADD PAYMENT MODAL
+    #modalPayment.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Add Payment
+            button.close(type="button", data-dismiss="modal")
+              span ×
+          .modal-body
+            form#paymentForm
+              .form-group
+                label Amount
+                input#payment_amount.form-control(type="number", min="1", step="0.01", required)
+              .form-group
+                label Payment Date
+                input#payment_date.form-control(type="date", required)
+              .form-group
+                label Mode
+                select#payment_mode.form-control(required)
+                  option(value="CASH") CASH
+                  option(value="UPI") UPI
+                  option(value="BANK") BANK
+                  option(value="CHEQUE") CHEQUE
+                  option(value="OTHER") OTHER
+              .form-group
+                label Reference No
+                input#payment_refNo.form-control(type="text", placeholder="UPI ref / cheque no / bank ref")
+              .form-group
+                label Notes
+                textarea#payment_notes.form-control(rows="2")
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button.btn.btn-success(type="submit", form="paymentForm")
+              i.la.la-save
+              |  Save Payment
+
+    // ADJUSTMENT MODAL
+    #modalAdjustment.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Manual Adjustment
+            button.close(type="button", data-dismiss="modal")
+              span ×
+          .modal-body
+            form#adjustmentForm
+              .form-group
+                label Adjustment Type
+                select#adjustment_type.form-control(required)
+                  option(value="DEBIT") Debit - Increase Receivable
+                  option(value="CREDIT") Credit - Reduce Receivable
+              .form-group
+                label Amount
+                input#adjustment_amount.form-control(type="number", min="1", step="0.01", required)
+              .form-group
+                label Date
+                input#adjustment_date.form-control(type="date", required)
+              .form-group
+                label Reason / Notes
+                textarea#adjustment_notes.form-control(rows="3", required)
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button.btn.btn-warning(type="submit", form="adjustmentForm")
+              i.la.la-save
+              |  Save Adjustment
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="/rpanel/js/footwear/su/party-ledger-ui.js" type="text/javascript")

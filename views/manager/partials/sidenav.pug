@@ -1,0 +1,178 @@
+button#kt_aside_close_btn.kt-aside-close
+  i.la.la-close
+
+#kt_aside.kt-aside.kt-aside--fixed.kt-grid__item.kt-grid.kt-grid--desktop.kt-grid--hor-desktop
+  // begin:: Aside
+  #kt_aside_brand.kt-aside__brand.kt-grid__item
+    .kt-aside__brand-logo
+      a(href="/manager")
+        img(alt="Logo" src="/rpanel/media/quill.png" style="width:110px;")
+    .kt-aside__brand-tools
+      button#kt_aside_toggler.kt-aside__brand-aside-toggler
+        span
+          svg.kt-svg-icon(xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1")
+            g(stroke="none" stroke-width="1" fill="none" fill-rule="evenodd")
+              polygon(points="0 0 24 0 24 24 0 24")
+              path(d="M5.29288961,6.70710318 C4.90236532,6.31657888 4.90236532,5.68341391 5.29288961,5.29288961 C5.68341391,4.90236532 6.31657888,4.90236532 6.70710318,5.29288961 L12.7071032,11.2928896 C13.0856821,11.6714686 13.0989277,12.281055 12.7371505,12.675721 L7.23715054,18.675721 C6.86395813,19.08284 6.23139076,19.1103429 5.82427177,18.7371505 C5.41715278,18.3639581 5.38964985,17.7313908 5.76284226,17.3242718 L10.6158586,12.0300721 L5.29288961,6.70710318 Z" fill="#000000" fill-rule="nonzero" transform="translate(8.999997, 11.999999) scale(-1, 1) translate(-8.999997, -11.999999) ")
+              path(d="M10.7071009,15.7071068 C10.3165766,16.0976311 9.68341162,16.0976311 9.29288733,15.7071068 C8.90236304,15.3165825 8.90236304,14.6834175 9.29288733,14.2928932 L15.2928873,8.29289322 C15.6714663,7.91431428 16.2810527,7.90106866 16.6757187,8.26284586 L22.6757187,13.7628459 C23.0828377,14.1360383 23.1103407,14.7686056 22.7371482,15.1757246 C22.3639558,15.5828436 21.7313885,15.6103465 21.3242695,15.2371541 L16.0300699,10.3841378 L10.7071009,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(15.999997, 11.999999) scale(-1, 1) rotate(-270.000000) translate(-15.999997, -11.999999) ")
+        span
+          svg.kt-svg-icon(xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewbox="0 0 24 24" version="1.1")
+            g(stroke="none" stroke-width="1" fill="none" fill-rule="evenodd")
+              polygon(points="0 0 24 0 24 24 0 24")
+              path(d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero")
+              path(d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999) ")
+
+  // end:: Aside
+
+  // begin:: Aside Menu
+  #kt_aside_menu_wrapper.kt-aside-menu-wrapper.kt-grid__item.kt-grid__item--fluid
+    #kt_aside_menu.kt-aside-menu(data-ktmenu-vertical="1" data-ktmenu-scroll="1" data-ktmenu-dropdown-timeout="500")
+      ul.kt-menu__nav
+
+        // Dashboard
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Dashboard" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/manager")
+            span.kt-menu__link-icon
+              i.la.la-home
+            span.kt-menu__link-text Dashboard
+
+        // Billing
+        li.kt-menu__section
+          h4.kt-menu__section-text Billing
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "New Bill" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/ma/billing")
+            span.kt-menu__link-icon
+              i.la.la-shopping-cart
+            span.kt-menu__link-text New Bill
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Draft Bills" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/billing?status=DRAFT")
+            span.kt-menu__link-icon
+              i.la.la-file-text-o
+            span.kt-menu__link-text Draft Bills
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Bill History" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/billing")
+            span.kt-menu__link-icon
+              i.la.la-list-alt
+            span.kt-menu__link-text Bill History
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Returns / Cancelled" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/billing?status=CANCELLED")
+            span.kt-menu__link-icon
+              i.la.la-undo
+            span.kt-menu__link-text Returns / Cancelled
+
+        // Stock In
+        li.kt-menu__section
+          h4.kt-menu__section-text Stock In
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "New Stock In" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stock-in")
+            span.kt-menu__link-icon
+              i.la.la-plus-circle
+            span.kt-menu__link-text New Stock In
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Draft Stock In Bills" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stock-in?status=DRAFT")
+            span.kt-menu__link-icon
+              i.la.la-pencil-square-o
+            span.kt-menu__link-text Draft Stock In Bills
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Confirmed Stock In Bills" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stock-in?status=CONFIRMED")
+            span.kt-menu__link-icon
+              i.la.la-check-circle
+            span.kt-menu__link-text Confirmed Stock In Bills
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Cancelled Stock In Bills" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stock-in?status=CANCELLED")
+            span.kt-menu__link-icon
+              i.la.la-close
+            span.kt-menu__link-text Cancelled Stock In Bills
+
+        // Store Stock
+        li.kt-menu__section
+          h4.kt-menu__section-text Store Stock
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Current Stock" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stockledger")
+            span.kt-menu__link-icon
+              i.la.la-cubes
+            span.kt-menu__link-text Current Stock
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "SKU Search" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/skus")
+            span.kt-menu__link-icon
+              i.la.la-search
+            span.kt-menu__link-text SKU Search
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Low Stock" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/stockledger?view=low-stock")
+            span.kt-menu__link-icon
+              i.la.la-exclamation-triangle
+            span.kt-menu__link-text Low Stock
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Damage / Shortage" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/damage-shortage")
+            span.kt-menu__link-icon
+              i.la.la-warning
+            span.kt-menu__link-text Damage / Shortage
+
+        // Customers / Parties
+        li.kt-menu__section
+          h4.kt-menu__section-text Customers / Parties
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Customers / Parties" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/parties")
+            span.kt-menu__link-icon
+              i.la.la-users
+            span.kt-menu__link-text Customers / Parties
+
+        // Day End
+        li.kt-menu__section
+          h4.kt-menu__section-text Day-End
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Day-End Closing" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/day-end")
+            span.kt-menu__link-icon
+              i.la.la-calendar-check-o
+            span.kt-menu__link-text Day-End Closing
+
+        // Tasks / Alerts
+        li.kt-menu__section
+          h4.kt-menu__section-text Tasks / Alerts
+          i.kt-menu__section-icon.flaticon-more-v2
+
+        li.kt-menu__item(aria-haspopup="true", class=(pageTitle === "Tasks / Alerts" ? "kt-menu__item--active" : ""))
+          a.kt-menu__link(href="/footwear/tasks-alerts")
+            span.kt-menu__link-icon
+              i.la.la-bell
+            span.kt-menu__link-text Tasks / Alerts
+                //- li.kt-menu__item
+                //-   a.kt-menu__link.kt-menu__toggle(href="javascript:;")
+                //-     span.kt-menu__link-icon
+                //-       svg.kt-svg-icon(xmlns='http://www.w3.org/2000/svg', xmlns:xlink='http://www.w3.org/1999/xlink', width='24px', height='24px', viewBox='0 0 24 24', version='1.1')
+                //-         g(stroke='none', stroke-width='1', fill='none', fill-rule='evenodd')
+                //-           rect(x='0', y='0', width='24', height='24')
+                //-           path(d='M16.5428932,17.4571068 L11,11.9142136 L11,4 C11,3.44771525 11.4477153,3 12,3 C12.5522847,3 13,3.44771525 13,4 L13,11.0857864 L17.9571068,16.0428932 L20.1464466,13.8535534 C20.3417088,13.6582912 20.6582912,13.6582912 20.8535534,13.8535534 C20.9473216,13.9473216 21,14.0744985 21,14.2071068 L21,19.5 C21,19.7761424 20.7761424,20 20.5,20 L15.2071068,20 C14.9309644,20 14.7071068,19.7761424 14.7071068,19.5 C14.7071068,19.3673918 14.7597852,19.2402148 14.8535534,19.1464466 L16.5428932,17.4571068 Z', fill='#000000', fill-rule='nonzero')
+                //-           path(d='M7.24478854,17.1447885 L9.2464466,19.1464466 C9.34021479,19.2402148 9.39289321,19.3673918 9.39289321,19.5 C9.39289321,19.7761424 9.16903559,20 8.89289321,20 L3.52893218,20 C3.25278981,20 3.02893218,19.7761424 3.02893218,19.5 L3.02893218,14.136039 C3.02893218,14.0034307 3.0816106,13.8762538 3.17537879,13.7824856 C3.37064094,13.5872234 3.68722343,13.5872234 3.88248557,13.7824856 L5.82567301,15.725673 L8.85405776,13.1631936 L10.1459422,14.6899662 L7.24478854,17.1447885 Z', fill='#000000', fill-rule='nonzero', opacity='0.3')
+                //-     span.kt-menu__link-text Milestones
+                //- li.kt-menu__section
+                //-   h4.kt-menu__section-text Files
+                //-   i.kt-menu__section-icon.flaticon-more-v2
+                //- li.kt-menu__item
+                //-   a.kt-menu__link.kt-menu__toggle(href="/ma/sample")
+                //-     span.kt-menu__link-icon
+                //-       svg.kt-svg-icon(xmlns='http://www.w3.org/2000/svg', xmlns:xlink='http://www.w3.org/1999/xlink', width='24px', height='24px', viewBox='0 0 24 24', version='1.1')
+                //-         g(stroke='none', stroke-width='1', fill='none', fill-rule='evenodd')
+                //-           rect(x='0', y='0', width='24', height='24')
+                //-           path(d='M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z', fill='#000000')
+                //-           rect(fill='#000000', opacity='0.3', transform='translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519) ', x='16.3255682', y='2.94551858', width='3', height='18', rx='1')
+                //-     span.kt-menu__link-text Samples

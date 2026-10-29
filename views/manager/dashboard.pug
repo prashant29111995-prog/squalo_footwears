@@ -1,0 +1,414 @@
+doctype html
+html(lang="en")
+  include ./partials/head.pug
+
+  style.
+    .mgr-page-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #2c2e4a;
+      margin-bottom: .25rem;
+    }
+
+    .mgr-page-subtitle {
+      color: #7b7f9e;
+      margin-bottom: 1.5rem;
+    }
+
+    .mgr-action-card {
+      display: block;
+      text-decoration: none !important;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all .18s ease;
+      border: 1px solid #eceffd;
+      box-shadow: 0 4px 14px rgba(32, 45, 75, 0.04);
+      min-height: 126px;
+    }
+
+    .mgr-action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(32, 45, 75, 0.10);
+      text-decoration: none !important;
+    }
+
+    .mgr-action-card .kt-portlet__body {
+      padding: 1.4rem 1.5rem;
+    }
+
+    .mgr-action-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .mgr-action-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: .35rem;
+    }
+
+    .mgr-action-desc {
+      margin: 0;
+      font-size: 1rem;
+      color: #6b7195;
+      line-height: 1.4;
+    }
+
+    .mgr-bg-brand {
+      background: #eef1ff;
+    }
+
+    .mgr-bg-success {
+      background: #e9fbf4;
+    }
+
+    .mgr-bg-warning {
+      background: #fff6e8;
+    }
+
+    .mgr-bg-info {
+      background: #eef5ff;
+    }
+
+    .mgr-icon-brand {
+      background: #e3e8ff;
+      color: #5867dd;
+    }
+
+    .mgr-icon-success {
+      background: #dff7ec;
+      color: #1dc28a;
+    }
+
+    .mgr-icon-warning {
+      background: #fff0d9;
+      color: #f39c12;
+    }
+
+    .mgr-icon-info {
+      background: #dfeeff;
+      color: #4b7bec;
+    }
+
+    .mgr-kpi-card {
+      background: #fff;
+      border: 1px solid #eceffd;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      min-height: 118px;
+      box-shadow: 0 4px 14px rgba(32, 45, 75, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .mgr-kpi-label {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #464b6a;
+      margin-bottom: .25rem;
+    }
+
+    .mgr-kpi-desc {
+      color: #8a8faf;
+      font-size: .9rem;
+      line-height: 1.35;
+    }
+
+    .mgr-kpi-value {
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 800;
+      margin-top: .6rem;
+    }
+
+    .mgr-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #eceffd;
+      box-shadow: 0 4px 14px rgba(32, 45, 75, 0.04);
+      margin-bottom: 1.5rem;
+    }
+
+    .mgr-card .kt-portlet__head {
+      min-height: 62px;
+      border-bottom: 1px solid #eef1fb;
+      padding: 0 1.25rem;
+    }
+
+    .mgr-card .kt-portlet__head-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2f3457;
+    }
+
+    .mgr-card .kt-portlet__body {
+      padding: 1rem 1.25rem 1.25rem 1.25rem;
+    }
+
+    .mgr-card-link {
+      font-size: .92rem;
+      font-weight: 600;
+    }
+
+    .mgr-search-wrap {
+      max-width: 420px;
+      margin-bottom: 1rem;
+    }
+
+    .mgr-table-compact thead th {
+      font-weight: 700;
+      color: #353a58;
+      white-space: nowrap;
+    }
+
+    .mgr-alert-badge {
+      display: inline-block;
+      min-width: 78px;
+      padding: .32rem .7rem;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .mgr-alert-critical {
+      background: #ffe7ea;
+      color: #d63350;
+    }
+
+    .mgr-alert-low {
+      background: #fff1dd;
+      color: #d9822b;
+    }
+
+    .mgr-alert-watch {
+      background: #fff7d9;
+      color: #ad8b00;
+    }
+
+    @media (max-width: 991px) {
+      .mgr-action-card {
+        min-height: 112px;
+      }
+
+      .mgr-kpi-value {
+        font-size: 1.7rem;
+      }
+    }
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading.overlayloader
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="/manager")
+          img(alt="Logo", src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ./partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ./partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ./partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .mb-4
+                .mgr-page-title Store Operations Dashboard
+                .mgr-page-subtitle Billing, stock-in, stock visibility, and urgent store alerts at one place.
+
+              // Quick Actions
+              .row
+                .col-md-6.col-lg-3
+                  a.kt-portlet.mgr-action-card.mgr-bg-brand(href="/footwear/billing/new")
+                    .kt-portlet__body
+                      .mgr-action-icon.mgr-icon-brand
+                        i.la.la-shopping-cart
+                      .mgr-action-title.kt-font-brand New Bill
+                      p.mgr-action-desc Start a new retail billing flow
+
+                .col-md-6.col-lg-3
+                  a.kt-portlet.mgr-action-card.mgr-bg-success(href="/footwear/stock-in")
+                    .kt-portlet__body
+                      .mgr-action-icon.mgr-icon-success
+                        i.la.la-plus-circle
+                      .mgr-action-title.kt-font-success Stock In
+                      p.mgr-action-desc Enter inward stock bills quickly
+
+                .col-md-6.col-lg-3
+                  a.kt-portlet.mgr-action-card.mgr-bg-warning(href="/footwear/stockledger")
+                    .kt-portlet__body
+                      .mgr-action-icon.mgr-icon-warning
+                        i.la.la-cubes
+                      .mgr-action-title.kt-font-warning Store Stock
+                      p.mgr-action-desc Check article, color, and size stock
+
+                .col-md-6.col-lg-3
+                  a.kt-portlet.mgr-action-card.mgr-bg-info(href="/footwear/billing")
+                    .kt-portlet__body
+                      .mgr-action-icon.mgr-icon-info
+                        i.la.la-search
+                      .mgr-action-title.kt-font-info Bill Search
+                      p.mgr-action-desc Search, open, and reprint bills
+
+              // KPI Cards
+              .row.mt-4
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Today Sales
+                      .mgr-kpi-desc Total billed today
+                    .mgr-kpi-value.kt-font-brand
+                      | ₹
+                      span#todaySales 0
+
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Bills Today
+                      .mgr-kpi-desc Total bills created
+                    .mgr-kpi-value.kt-font-success
+                      span#billsToday 0
+
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Pairs Sold
+                      .mgr-kpi-desc Quantity sold today
+                    .mgr-kpi-value.kt-font-warning
+                      span#pairsSoldToday 0
+
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Stock In Today
+                      .mgr-kpi-desc Inward quantity today
+                    .mgr-kpi-value.kt-font-success
+                      span#stockInToday 0
+
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Draft Bills
+                      .mgr-kpi-desc Pending to finalize
+                    .mgr-kpi-value.kt-font-danger
+                      span#draftBills 0
+
+                .col-md-6.col-lg-4.col-xl-2
+                  .mgr-kpi-card
+                    div
+                      .mgr-kpi-label Low Stock
+                      .mgr-kpi-desc Urgent refill items
+                    .mgr-kpi-value.kt-font-danger
+                      span#lowStockCount 0
+
+              .row
+                .col-lg-6
+                  .kt-portlet.kt-portlet--mobile.mgr-card
+                    .kt-portlet__head
+                      .kt-portlet__head-label
+                        h3.kt-portlet__head-title Recent Bills
+                      .kt-portlet__head-toolbar
+                        a.mgr-card-link(href="/footwear/billing") View All
+                    .kt-portlet__body
+                      table#recentBillsTable.table.table-striped.table-bordered.table-hover.table-checkable.mgr-table-compact
+                        thead
+                          tr
+                            th Bill No
+                            th Time
+                            th Customer
+                            th Qty
+                            th Amount
+                            th Status
+                        tbody
+
+                .col-lg-6
+                  .kt-portlet.kt-portlet--mobile.mgr-card
+                    .kt-portlet__head
+                      .kt-portlet__head-label
+                        h3.kt-portlet__head-title Recent Stock In
+                      .kt-portlet__head-toolbar
+                        a.mgr-card-link(href="/footwear/stock-in") Open Stock In
+                    .kt-portlet__body
+                      table#recentStockInTable.table.table-striped.table-bordered.table-hover.table-checkable.mgr-table-compact
+                        thead
+                          tr
+                            th Bill No
+                            th Time
+                            th Supplier
+                            th Qty
+                            th Lines
+                            th Status
+                        tbody
+
+              .row
+                .col-lg-12
+                  .kt-portlet.kt-portlet--mobile.mgr-card
+                    .kt-portlet__head
+                      .kt-portlet__head-label
+                        h3.kt-portlet__head-title Low Stock Alerts
+                      .kt-portlet__head-toolbar
+                        a.mgr-card-link(href="/footwear/stockledger") View Stock
+                    .kt-portlet__body
+                      .mgr-search-wrap
+                        .kt-input-icon.kt-input-icon--left
+                          input#lowStockSearch.form-control(type="text", placeholder="Search article / color / size...")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            span
+                              i.la.la-search
+
+                      table#lowStockTable.table.table-striped.table-bordered.table-hover.table-checkable.mgr-table-compact
+                        thead
+                          tr
+                            th Brand
+                            th Article
+                            th Color
+                            th Size
+                            th Available Qty
+                            th Alert
+                        tbody
+
+          include ./partials/footer.pug
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script.
+      var KTAppOptions = {
+        "colors": {
+          "state": {
+            "brand": "#5d78ff",
+            "dark": "#282a3c",
+            "light": "#ffffff",
+            "primary": "#5867dd",
+            "success": "#34bfa3",
+            "info": "#36a3f7",
+            "warning": "#ffb822",
+            "danger": "#fd3995"
+          },
+          "base": {
+            "label": ["#c5cbe3", "#a1a8c3", "#3d4465", "#3e4466"],
+            "shape": ["#f0f3ff", "#d9dffa", "#afb4d4", "#646c9a"]
+          }
+        }
+      };
+
+    script(src="/assets/plugins/global/plugins.bundle.js", type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js", type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js", type="text/javascript")
+    script(src="/rpanel/js/manager/dashboard.js", type="text/javascript")

@@ -1,0 +1,304 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  style.
+    .party-page-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .party-title h3{
+      margin:0;
+      font-weight:800;
+      color:#2c2e3e;
+    }
+    .party-title small{
+      color:#8a90a5;
+      font-size:13px;
+    }
+    .party-stat-card{
+      background:#fff;
+      border:1px solid #edf0f7;
+      border-radius:14px;
+      padding:18px;
+      min-height:105px;
+      box-shadow:0 8px 24px rgba(31,45,61,.04);
+      position:relative;
+      overflow:hidden;
+    }
+    .party-stat-card:after{
+      content:"";
+      position:absolute;
+      right:-20px;
+      top:-20px;
+      width:70px;
+      height:70px;
+      border-radius:50%;
+      background:rgba(93,120,255,.08);
+    }
+    .party-stat-label{
+      font-size:12px;
+      color:#74788d;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+    .party-stat-value{
+      font-size:30px;
+      font-weight:900;
+      color:#2c2e3e;
+      line-height:1;
+    }
+    .party-stat-brand .party-stat-value{ color:#5d78ff; }
+    .party-stat-success .party-stat-value{ color:#10b981; }
+    .party-stat-info .party-stat-value{ color:#3b82f6; }
+    .party-stat-danger .party-stat-value{ color:#ef3e7b; }
+    .party-filter-box{
+      border:1px solid #edf0f7;
+      background:#fbfcff;
+      border-radius:14px;
+      padding:16px;
+      margin-bottom:18px;
+    }
+    .party-table-wrap{
+      border:1px solid #edf0f7;
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+    }
+    #partiesTable{
+      margin-bottom:0 !important;
+    }
+    #partiesTable th{
+      background:#f8f9fb;
+      font-weight:800;
+      color:#344054;
+      border-bottom:1px solid #edf0f7 !important;
+      white-space:nowrap;
+    }
+    #partiesTable td{
+      vertical-align:middle !important;
+      white-space:nowrap;
+    }
+    #partiesTable td:first-child{
+      white-space:normal;
+      min-width:230px;
+    }
+    .party-name-main{
+      font-weight:800;
+      color:#2c2e3e;
+      font-size:14px;
+    }
+    .party-name-sub{
+      color:#8a90a5;
+      font-size:11px;
+      margin-top:3px;
+    }
+    .party-actions{
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+    .party-actions .btn-icon{
+      width:36px;
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+    }
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .party-page-head
+                .party-title
+                  h3 Parties
+                  small Customer, supplier and account management
+                button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalPartyCreate")
+                  i.la.la-plus
+                  |  Add Party
+
+              .row.mb-4
+                .col-md-3
+                  .party-stat-card.party-stat-brand
+                    .party-stat-label Total Parties
+                    .party-stat-value#stat_total_parties 0
+
+                .col-md-3
+                  .party-stat-card.party-stat-success
+                    .party-stat-label Customers
+                    .party-stat-value#stat_total_customers 0
+
+                .col-md-3
+                  .party-stat-card.party-stat-info
+                    .party-stat-label Suppliers
+                    .party-stat-value#stat_total_suppliers 0
+
+                .col-md-3
+                  .party-stat-card.party-stat-danger
+                    .party-stat-label Inactive
+                    .party-stat-value#stat_inactive 0
+
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__body
+                  .party-filter-box
+                    .row.align-items-end
+                      .col-md-4.col-sm-12
+                        label Search
+                        .kt-input-icon.kt-input-icon--left
+                          input#generalSearch.form-control(type="text", placeholder="Search party, phone, GSTIN...")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            span
+                              i.la.la-search
+
+                      .col-md-3.col-sm-6.mt-2.mt-md-0
+                        label Type
+                        select#partyTypeFilter.form-control
+                          option(value="") All Types
+                          option(value="SUPPLIER") Supplier
+                          option(value="CUSTOMER") Customer
+                          option(value="BOTH") Both
+
+                      .col-md-3.col-sm-6.mt-2.mt-md-0
+                        label Status
+                        select#activeFilter.form-control
+                          option(value="true") Active Only
+                          option(value="false") Inactive Only
+                          option(value="all") All Status
+
+                      .col-md-2.col-sm-12.mt-2.mt-md-0
+                        button#resetFilters.btn.btn-outline-secondary.btn-block(type="button")
+                          i.la.la-undo
+                          |  Reset
+
+                  .party-table-wrap
+                    table#partiesTable.table.table-hover.table-bordered.table-checkable
+                      thead
+                        tr
+                          th Party
+                          th Type
+                          th Phone
+                          th Address
+                          th Status
+                          th Quick Actions
+                      tbody
+
+          include ../partials/footer.pug
+
+    // CREATE PARTY MODAL
+    #modalPartyCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Add Party
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#partyCreateForm
+              .form-group
+                label Name
+                input#party_name.form-control(type="text" required placeholder="Party name")
+
+              .form-group
+                label Party Type
+                select#party_partyType.form-control(required)
+                  option(value="SUPPLIER") Supplier
+                  option(value="CUSTOMER" selected) Customer
+                  option(value="BOTH") Both
+
+              .form-group
+                label Phone
+                input#party_phone.form-control(type="text" placeholder="Mobile number")
+
+              .form-group
+                label Address
+                input#party_address.form-control(type="text" placeholder="Area / shop / market")
+
+              .form-group
+                label GSTIN
+                input#party_gstin.form-control(type="text" placeholder="Optional")
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button.btn.btn-brand(type="submit", form="partyCreateForm") Save
+
+    // UPDATE PARTY MODAL
+    #modalPartyEdit.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Update Party
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#partyEditForm
+              input#edit_party_id(type="hidden")
+
+              .form-group
+                label Name
+                input#edit_party_name.form-control(type="text" required)
+
+              .form-group
+                label Party Type
+                select#edit_party_partyType.form-control(required)
+                  option(value="SUPPLIER") Supplier
+                  option(value="CUSTOMER") Customer
+                  option(value="BOTH") Both
+
+              .form-group
+                label Phone
+                input#edit_party_phone.form-control(type="text")
+
+              .form-group
+                label Address
+                input#edit_party_address.form-control(type="text")
+
+              .form-group
+                label GSTIN
+                input#edit_party_gstin.form-control(type="text")
+
+              .form-group
+                label Active
+                select#edit_party_active.form-control
+                  option(value="true") Yes
+                  option(value="false") No
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button.btn.btn-brand(type="submit", form="partyEditForm") Update
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+
+    script(src="/rpanel/js/footwear/su/parties-ui.js" type="text/javascript")

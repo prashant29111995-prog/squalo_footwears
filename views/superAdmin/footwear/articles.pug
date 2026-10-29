@@ -1,0 +1,223 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title Articles
+                  .kt-portlet__head-toolbar
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalArticleCreate")
+                      i.la.la-plus
+                      |  Add Article
+                    
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalCategory")
+                      i.la.la-plus
+                      |  Categories
+                
+                .kt-portlet__body(style="padding-top:0")
+                  .kt-form.kt-form--label-right.kt-margin-t-10.kt-margin-b-10
+                    .row.align-items-center
+                      .col-md-3
+                        label.mb-1 Category Group
+                        select#filter_categoryGroup.form-control
+                          option(value="") All Groups
+                          option(value="MEN") MEN
+                          option(value="WOMEN") WOMEN
+                          option(value="KIDS") KIDS
+                          option(value="UNISEX") UNISEX
+
+                      .col-md-3
+                        label.mb-1 Category
+                        select#filter_category.form-control(disabled)
+                          option(value="") All Categories
+
+                      .col-md-3
+                        label.mb-1 Brand
+                        input#filter_brand.form-control(type="text" placeholder="CLD / INDUS")
+
+                      .col-md-3.mt-4
+                        button#btnClearFilters.btn.btn-sm.btn-secondary(type="button") Clear Filters
+                  .kt-form.kt-form--label-right.kt-margin-t-20.kt-margin-b-10
+                    .row.align-items-center
+                      .col-xl-6.order-2.order-xl-1
+                        .kt-input-icon.kt-input-icon--left
+                          input#generalSearch.form-control(type="text", placeholder="Search articles...")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            span
+                              i.la.la-search
+
+                  table#articlesTable.table.table-striped.table-bordered.table-hover.table-checkable
+                    thead
+                      tr
+                        th Brand
+                        th Article
+                        th Category Group
+                        th Category
+                        th Actions
+                    tbody
+
+          include ../partials/footer.pug
+    // CATEGORY MODEL
+    #modalCategory.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Categories
+            
+            button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalCategoryCreate")
+                      i.la.la-plus
+                      |  Add Category
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true")
+          .modal-body
+            table#CategoryTable.table.table-striped.table-bordered.table-hover.table-checkable
+                    thead
+                      tr
+                        th Category Group
+                        th Category
+                        th Actions
+                    tbody
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+    // CREATE CATEGORY MODAL
+    #modalCategoryCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Categories
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true")
+          .modal-body
+             form#categoryCreateForm
+              .form-group
+                label Category Group
+                select#categoryCreateForm_categoryGroup.form-control(required)
+                  option(value="" disabled selected) Select group
+                  option(value="MEN") MEN
+                  option(value="WOMEN") WOMEN
+                  option(value="KIDS") KIDS
+                  option(value="UNISEX") UNISEX
+              .form-group
+                label Category
+                input#categoryCreateForm_categoryinput.form-control(type="text" placeholder="Gents PU" required)
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#categoryCreateForm_btnCreateArticle.btn.btn-brand(type="submit", form="articleCreateForm") Save
+    
+    // CREATE ARTICLE MODAL
+    #modalArticleCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Add Article
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#articleCreateForm
+              .form-group
+                label Brand
+                input#article_brand.form-control(type="text" placeholder="CLD / INDUS / SPARX" required)
+              .form-group
+                label Article Name
+                input#article_name.form-control(type="text" placeholder="WINFLOW-1" required)
+              .form-group
+                label Category Group
+                select#article_categoryGroup.form-control(required)
+                  option(value="" disabled selected) Select group
+                  option(value="MEN") MEN
+                  option(value="WOMEN") WOMEN
+                  option(value="KIDS") KIDS
+                  option(value="UNISEX") UNISEX
+              .form-group
+                label Category
+                select#article_category.form-control(required disabled)
+                  option(value="" disabled selected) Select category
+              .form-group
+                label Notes (optional)
+                textarea#article_notes.form-control(rows="2" placeholder="Any extra notes...")
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#btnCreateArticle.btn.btn-brand(type="submit", form="articleCreateForm") Save
+
+    // UPDATE ARTICLE MODAL
+    #modalArticleEdit.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Update Article
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#articleEditForm
+              input#edit_article_id(type="hidden")
+
+              .form-group
+                label Brand
+                input#edit_article_brand.form-control(type="text" required)
+
+              .form-group
+                label Article Name
+                input#edit_article_name.form-control(type="text" required)
+
+              .form-group
+                label Category Group
+                select#edit_article_categoryGroup.form-control(required)
+                  option(value="MEN") MEN
+                  option(value="WOMEN") WOMEN
+                  option(value="KIDS") KIDS
+                  option(value="UNISEX") UNISEX
+
+              .form-group
+                label Category
+                select#edit_article_category.form-control(required disabled)
+                  option(value="" disabled selected) Select category
+              .form-group
+                label Active
+                select#edit_article_active.form-control
+                  option(value="true") Yes
+                  option(value="false") No
+
+              .form-group
+                label Notes (optional)
+                textarea#edit_article_notes.form-control(rows="2")
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#btnUpdateArticle.btn.btn-brand(type="submit", form="articleEditForm") Update
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+
+    // ✅ ONE JS FILE ONLY for Articles page
+    script(src="/rpanel/js/footwear/su/articles-ui.js" type="text/javascript")

@@ -1,0 +1,212 @@
+doctype html
+html(dir='ltr', lang='en-US')
+  head
+    meta(http-equiv='content-type', content='text/html; charset=utf-8')
+    meta(name='author', content='Squalo Solutions (P) ltd.')
+    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700', rel='stylesheet', type='text/css')
+    link(rel='stylesheet', href='css/bootstrap.css', type='text/css')
+    link(rel='stylesheet', href='style.css', type='text/css')
+    link(rel='stylesheet', href='one-page/onepage.css', type='text/css')
+    link(rel='stylesheet', href='css/dark.css', type='text/css')
+    link(rel='stylesheet', href='css/font-icons.css', type='text/css')
+    link(rel='stylesheet', href='one-page/css/et-line.css', type='text/css')
+    link(rel='stylesheet', href='css/animate.css', type='text/css')
+    link(rel='stylesheet', href='css/magnific-popup.css', type='text/css')
+    link(rel='stylesheet', href='one-page/css/fonts.css', type='text/css')
+    link(rel='stylesheet', href='css/custom.css', type='text/css')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    title Terms &amp; Conditions | TheSqualo
+    style.
+  body.stretched.stretched.block-testimonials-3
+    #wrapper.clearfix
+      header#header.full-header.transparent-header.border-full-header.header-size-custom(data-sticky-shrink='false')
+        #header-wrap
+          .container
+            .header-row
+              #logo
+                a.standard-logo(href='/', data-dark-logo='one-page/images/canvasone-dark.png')
+                  img(src='one-page/images/logo-only.png', alt='Logo')
+                a.retina-logo(href='/', data-dark-logo='one-page/images/canvasone-dark@2x.png')
+                  img(src='one-page/images/logo-only.png', alt='Logo')
+              #primary-menu-trigger
+                svg.svg-trigger(viewBox='0 0 100 100')
+                  path(d='m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20')
+                  path(d='m 30,50 h 40')
+                  path(d='m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20')
+              nav.primary-menu
+                ul.one-page-menu.menu-container(data-easing='easeInOutExpo', data-speed='1250', data-offset='65')
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#wrapper')
+                      div Home
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#contentwork')
+                      div About
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#specialization')
+                      div Specialization
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#price')
+                      div Pricing
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#review')
+                      div Reviews
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#faqs')
+                      div F.A.Qs
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#contact')
+                      div Contact
+                  li.menu-item
+                    a.button.button-large.button-rounded.m-0(href='#block-modal-contact', data-lightbox='inline', style='background-color:#084678') Start Trial
+              .modal-on-load(data-target='#block-modal-contact')
+              #block-modal-contact.modal1.mfp-hide
+                .modal-dialog.modal-dialog-centered.modal-lg
+                  .modal-content.bg-white.rounded
+                    .loader1(style='display:none;')
+                    .row.m-0
+                      .col-lg-6.d-flex.align-items-center.bg-light
+                        img(src='images/blocks/preview/popups/popup-contact.svg', alt='Image')
+                      #afterformsubmit.col-lg-6.p-5(style='display:none;')
+                        h3.mb-3 Thank you so much. We will be in touch with you shortly.
+                      #beforeformsubmit.col-lg-6.p-5
+                        h3.mb-3 Just Ping us we will connect with you.
+                        .form-widget
+                          .form-result
+                          form#block-contactform.mb-0(name='block-contactform', onsubmit='return validateForm()', method='post')
+                            .row
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-name')
+                                  | Name 
+                                  small *
+                                input#block-contactform-name.form-control.required(type='text', name='block-contactform-name', value='')
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-email')
+                                  | Email 
+                                  small *
+                                input#block-contactform-email.required.email.form-control(type='email', name='block-contactform-email', value='')
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-email')
+                                  | Phone 
+                                  small *
+                                input#block-contactform-number.required.email.form-control(type='tel', name='block-contactform-email', value='')
+                              .col-md-12.form-group
+                                label.nott.ls0.fw-medium(for='template-contactform-subject') Subject
+                                select#template-contactform-subject.form-select.required.valid(name='template-contactform-subject')
+                                  option(disabled='', selected='', value='') -- Select One --
+                                  option(value='Design') AI Tools
+                                  option(value='Development') Hire Writers
+                                  option(value='Marketing') Academic Support
+                                  option(value='Support') Content Development
+                              .col-12.d-flex.justify-content-end
+                                button#block-contactform-submit.btn.w-100.btn-primary.py-2.mx-0(name='block-contactform-submit', onclick='sendMessage();') Send Message
+                            input(type='hidden', name='prefix', value='block-contactform-')
+        .header-wrap-clone
+      section#content
+        .content-wrap.py-0(style='overflow: visible')
+          #about.row.feature-box-border-horizontal.border-hover-animate.col-mb-50.justify-content-center.my-5
+            .heading-block.center(style='margin-top:150px;')
+              h2 Terms &amp; Conditions
+              span
+                | Please read the terms and conditions carefully before beginning any relationship with TheSqualo. The following terms and conditions form the basis for our interactions with you and set forth the expectations we have for working together. By using and continuing to use TheSqualo&apos;s services, you agree to the terms and conditions outlined below.
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Site Content Usage
+                p
+                  | This website is a resource for those who need content writing services, and a place to deliver those services to paying customers. The first step in working with a customer is having them register and create an account. After a consumer creates an account, they can submit a full order with all of the specified details. Every piece of data should be double-checked for accuracy. If Content Whale determines that any of the information provided is incorrect, it will take appropriate action in accordance with its policies. Customers should double-check their information for accuracy before submitting it.
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Trademarks and Copyright
+                p
+                  | The website and all of the information contained within it are the exclusive property of thesqualo. thesqualo owns the Trademark and Copyright for all content on the site, including but not limited to text, photos, graphics, audio, the page header, and video clips.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Any material you save from thesqualo remains the sole property of thesqualo. Without thesqualo &apos;s express written permission, you may not reuse, alter, or steal any of our content in any way.
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Disclaimers
+                p
+                  | For the avoidance of doubt, any and all former and current agreements and settlements, written or oral, addressing the subject matter of this agreement are hereby null and void. Any changes to the contract must be submitted in writing and authorised by the firm.
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Limitation of Liability
+                p
+                  | No employee or member of thesqualo may be held liable for any act taken or made in good faith, regardless of whether it results in data loss. Data loss is the responsibility of the client. Use of any information or data accessed on this website is entirely at your own risk. thesqualo will not be held legally responsible for any damages that may result.
+            | &#x9;&#x9;&#x9;   
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Entire Agreement
+                p
+                  | The terms and conditions that you and thesqualo have agreed to are comprehensive and apply to your use of this website. All existing agreements, whether written or verbal, are null and invalid in light of this agreement. thesqualo reserves the right to change, alter, or remove any part of these terms of service at their discretion, and you are under no obligation to give thesqualo any advance notice or information.
+    footer#footer.dark
+      //
+        Copyrights
+        =============================================
+      #copyrights
+        .container
+          .row.justify-content-between.col-mb-30
+            .col-12.col-lg-auto.text-center.text-lg-start.order-last.order-lg-first
+              img.mb-4(src='image.png', alt='Image')
+              br
+              | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;Copyrights &copy; 2020 All Rights Reserved by Squalo solutions (P) ltd.
+            .col-12.col-lg-auto.text-center.text-lg-end
+              .copyrights-menu.copyright-links
+                a(href='/terms') Terms &amp; Condition
+                | /
+                a(href='/privacy') Privacy Policy
+                | /
+                a(href='/refund') Refund &amp; cancellation
+          .row.justify-content-between.col-mb-30
+              .col-12.col-lg-auto.text-center.text-lg-start.order-last.order-lg-first
+              .col-12.col-lg-auto.text-center.text-lg-end
+                .copyrights-menu.copyright-links
+                  a(href='/login') Staff Login
+      // #copyrights end
+      // #footer end
+    #gotoTop.icon-angle-up
+    script(src='js/jquery.js')
+    script(src='js/custom.js')
+    script(src='js/plugins.min.js')
+    script(src='https://maps.google.com/maps/api/js?key=AIzaSyAO2BYvn4xyrdisvP8feA4AS_PGZFxJDp4')
+    script(src='js/functions.js')
+    script.
+      jQuery(document).ready( function($){
+      var $faqItems = $('#faqs .faq');
+      if( window.location.hash != '' ) {
+      var getFaqFilterHash = window.location.hash;
+      var hashFaqFilter = getFaqFilterHash.split('#');
+      if( $faqItems.hasClass( hashFaqFilter[1] ) ) {
+      $('.grid-filter li').removeClass('activeFilter');
+      $( '[data-filter=".'+ hashFaqFilter[1] +'"]' ).parent('li').addClass('activeFilter');
+      var hashFaqSelector = '.' + hashFaqFilter[1];
+      $faqItems.css('display', 'none');
+      if( hashFaqSelector != 'all' ) {
+      $( hashFaqSelector ).fadeIn(500);
+      } else {
+      $faqItems.fadeIn(500);
+      }
+      }
+      }
+      $('.grid-filter a').on( 'click', function(){
+      $('.grid-filter li').removeClass('activeFilter');
+      $(this).parent('li').addClass('activeFilter');
+      var faqSelector = $(this).attr('data-filter');
+      $faqItems.css('display', 'none');
+      if( faqSelector != 'all' ) {
+      $( faqSelector ).fadeIn(500);
+      } else {
+      $faqItems.fadeIn(500);
+      }
+      return false;
+      });
+      var swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 0,
+      freeMode: true,
+      grabCursor: true,
+      scrollbar: {
+      el: '.swiper-scrollbar',
+      },
+      });
+      });

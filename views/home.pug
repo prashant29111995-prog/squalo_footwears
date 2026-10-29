@@ -1,0 +1,807 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Squalo Footwears | Smart Footwear Distribution Network
+    meta(name="description", content="Squalo Footwears is building a tech-enabled footwear distribution and factory outlet network across Faridabad and NCR.")
+
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap", rel="stylesheet")
+
+    style.
+      :root{
+        --bg:#f7fbff;
+        --dark:#061523;
+        --blue:#0877ff;
+        --cyan:#10d4ff;
+        --text:#111827;
+        --muted:#64748b;
+        --card:#ffffffcc;
+        --border:#e5eef8;
+      }
+
+      *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      body{
+        margin:0;
+        font-family:Inter,Arial,sans-serif;
+        background:var(--bg);
+        color:var(--text);
+        overflow-x:hidden;
+      }
+
+      .container{max-width:1180px;margin:auto;padding:0 22px}
+
+      .nav{
+        position:fixed;
+        top:18px;
+        left:50%;
+        transform:translateX(-50%);
+        width:calc(100% - 44px);
+        max-width:1180px;
+        height:68px;
+        background:rgba(255,255,255,.78);
+        backdrop-filter:blur(18px);
+        border:1px solid var(--border);
+        border-radius:22px;
+        z-index:999;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 18px;
+        box-shadow:0 18px 50px rgba(8,119,255,.08);
+      }
+
+      .logo{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        font-weight:900;
+        color:var(--dark);
+      }
+
+      .logo-mark{
+        width:42px;
+        height:42px;
+        border-radius:14px;
+        background:linear-gradient(135deg,var(--blue),var(--cyan));
+        color:white;
+        display:grid;
+        place-items:center;
+        font-weight:900;
+      }
+
+      .nav a{
+        color:#334155;
+        font-size:14px;
+        font-weight:700;
+        margin-left:20px;
+        text-decoration:none;
+      }
+
+      .btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        padding:13px 18px;
+        border-radius:999px;
+        font-weight:900;
+        text-decoration:none;
+        border:0;
+        cursor:pointer;
+      }
+
+      .btn-primary{
+        background:linear-gradient(135deg,var(--blue),#0054c8);
+        color:white!important;
+        box-shadow:0 15px 35px rgba(8,119,255,.25);
+      }
+
+      .btn-light{
+        background:white;
+        color:var(--blue)!important;
+        border:1px solid var(--border);
+      }
+
+      .hero{
+        min-height:100vh;
+        padding:150px 0 80px;
+        position:relative;
+        background:
+          radial-gradient(circle at 75% 15%, rgba(16,212,255,.25), transparent 30%),
+          radial-gradient(circle at 20% 30%, rgba(8,119,255,.18), transparent 28%),
+          linear-gradient(180deg,#ffffff 0%,#f6fbff 100%);
+      }
+
+      .hero-grid{
+        display:grid;
+        grid-template-columns:1.08fr .92fr;
+        gap:44px;
+        align-items:center;
+      }
+
+      .badge{
+        display:inline-flex;
+        padding:8px 13px;
+        border-radius:999px;
+        background:#eaf5ff;
+        color:var(--blue);
+        font-weight:900;
+        font-size:13px;
+        margin-bottom:18px;
+      }
+
+      h1{
+        font-size:64px;
+        line-height:1.02;
+        letter-spacing:-2.6px;
+        margin:0 0 20px;
+        color:var(--dark);
+        font-weight:900;
+      }
+
+      .gradient-text{
+        background:linear-gradient(135deg,var(--blue),var(--cyan));
+        -webkit-background-clip:text;
+        color:transparent;
+      }
+
+      .lead{
+        font-size:18px;
+        line-height:1.8;
+        color:var(--muted);
+        max-width:680px;
+        margin-bottom:28px;
+      }
+
+      .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+      .dashboard-card{
+        background:rgba(255,255,255,.78);
+        backdrop-filter:blur(16px);
+        border:1px solid var(--border);
+        border-radius:32px;
+        padding:24px;
+        box-shadow:0 30px 90px rgba(8,119,255,.12);
+        position:relative;
+        overflow:hidden;
+      }
+
+      .dashboard-card:before{
+        content:"";
+        position:absolute;
+        inset:-80px -80px auto auto;
+        width:200px;
+        height:200px;
+        border-radius:50%;
+        background:rgba(16,212,255,.22);
+      }
+
+      .mini-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:18px;
+        position:relative;
+        z-index:1;
+      }
+
+      .pulse{
+        width:10px;
+        height:10px;
+        background:#22c55e;
+        border-radius:50%;
+        box-shadow:0 0 0 8px rgba(34,197,94,.12);
+      }
+
+      .metric-grid{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+        position:relative;
+        z-index:1;
+      }
+
+      .metric{
+        background:white;
+        border:1px solid var(--border);
+        border-radius:20px;
+        padding:18px;
+      }
+
+      .metric span{
+        color:var(--muted);
+        font-size:12px;
+        font-weight:800;
+      }
+
+      .metric h3{
+        margin:8px 0 0;
+        font-size:25px;
+        color:var(--dark);
+      }
+
+      .flow-card{
+        margin-top:14px;
+        background:#061523;
+        color:white;
+        border-radius:22px;
+        padding:20px;
+        position:relative;
+        z-index:1;
+      }
+
+      .flow-row{
+        display:flex;
+        justify-content:space-between;
+        padding:10px 0;
+        border-bottom:1px solid rgba(255,255,255,.12);
+        font-weight:800;
+      }
+
+      section{padding:90px 0}
+
+      .section-head{
+        text-align:center;
+        max-width:760px;
+        margin:0 auto 48px;
+      }
+
+      .section-head h2{
+        font-size:46px;
+        line-height:1.12;
+        margin:0 0 14px;
+        color:var(--dark);
+        font-weight:900;
+        letter-spacing:-1.4px;
+      }
+
+      .section-head p{
+        color:var(--muted);
+        font-size:17px;
+        line-height:1.75;
+        margin:0;
+      }
+
+      .grid-3{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:20px;
+      }
+
+      .smart-card{
+        background:white;
+        border:1px solid var(--border);
+        border-radius:28px;
+        padding:28px;
+        box-shadow:0 16px 42px rgba(15,23,42,.04);
+        transition:.35s ease;
+      }
+
+      .smart-card:hover{
+        transform:translateY(-8px);
+        box-shadow:0 30px 70px rgba(8,119,255,.12);
+      }
+
+      .icon{
+        width:54px;
+        height:54px;
+        border-radius:18px;
+        background:#eaf5ff;
+        display:grid;
+        place-items:center;
+        font-size:25px;
+        margin-bottom:18px;
+      }
+
+      .smart-card h3{
+        margin:0 0 10px;
+        color:var(--dark);
+        font-weight:900;
+        font-size:21px;
+      }
+
+      .smart-card p{
+        margin:0;
+        color:var(--muted);
+        line-height:1.7;
+      }
+
+      .dark{
+        background:#061523;
+        color:white;
+        position:relative;
+        overflow:hidden;
+      }
+
+      .dark:before{
+        content:"";
+        position:absolute;
+        width:420px;
+        height:420px;
+        border-radius:50%;
+        background:rgba(8,119,255,.25);
+        top:-140px;
+        right:-140px;
+      }
+
+      .dark .section-head h2,
+      .dark .section-head p{color:white}
+
+      .process{
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:14px;
+        position:relative;
+      }
+
+      .process-step{
+        background:rgba(255,255,255,.08);
+        border:1px solid rgba(255,255,255,.14);
+        border-radius:24px;
+        padding:22px;
+        min-height:170px;
+      }
+
+      .process-step b{
+        display:block;
+        color:#10d4ff;
+        margin-bottom:12px;
+      }
+
+      .process-step h4{
+        margin:0 0 10px;
+        color:white;
+        font-weight:900;
+      }
+
+      .process-step p{
+        color:#cbd5e1;
+        margin:0;
+        line-height:1.6;
+        font-size:14px;
+      }
+
+      .catalogue{
+        background:#fff;
+      }
+
+      .catalogue-toolbar{
+        display:flex;
+        justify-content:center;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-bottom:28px;
+      }
+
+      .chip{
+        border:1px solid var(--border);
+        background:white;
+        border-radius:999px;
+        padding:10px 15px;
+        font-weight:900;
+        color:#475569;
+        cursor:pointer;
+      }
+
+      .chip.active{
+        background:var(--blue);
+        color:white;
+        border-color:var(--blue);
+      }
+
+      .product-grid{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:18px;
+      }
+
+      .product{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:24px;
+        overflow:hidden;
+        transition:.3s ease;
+      }
+
+      .product:hover{transform:translateY(-6px)}
+
+      .product-img{
+        height:150px;
+        background:linear-gradient(135deg,#eef7ff,#ffffff);
+        display:grid;
+        place-items:center;
+        font-size:52px;
+      }
+
+      .product-body{padding:18px}
+      .product-body h4{margin:0 0 6px;font-weight:900;color:var(--dark)}
+      .product-body p{margin:0 0 12px;color:var(--muted);font-size:13px}
+      .tag{display:inline-flex;background:#eaf5ff;color:var(--blue);font-weight:900;border-radius:999px;padding:5px 8px;font-size:11px;margin-right:5px}
+
+      .invest-box{
+        background:linear-gradient(135deg,#0877ff,#061523);
+        border-radius:34px;
+        padding:52px;
+        color:white;
+        display:grid;
+        grid-template-columns:1fr .9fr;
+        gap:38px;
+        align-items:center;
+        box-shadow:0 35px 90px rgba(8,119,255,.22);
+      }
+
+      .invest-box h2{
+        color:white;
+        font-size:44px;
+        line-height:1.1;
+        margin:0 0 16px;
+        font-weight:900;
+      }
+
+      .invest-box p{
+        color:#e2f3ff;
+        line-height:1.8;
+        font-size:17px;
+      }
+
+      .invest-list{
+        display:grid;
+        gap:12px;
+      }
+
+      .invest-list div{
+        background:rgba(255,255,255,.12);
+        border:1px solid rgba(255,255,255,.18);
+        border-radius:16px;
+        padding:15px;
+        font-weight:800;
+      }
+
+      .contact{
+        background:#f3f9ff;
+      }
+
+      .contact-grid{
+        display:grid;
+        grid-template-columns:.9fr 1.1fr;
+        gap:24px;
+      }
+
+      .contact-card{
+        background:white;
+        border:1px solid var(--border);
+        border-radius:28px;
+        padding:30px;
+      }
+
+      .form{
+        display:grid;
+        gap:12px;
+      }
+
+      .form input,.form select,.form textarea{
+        border:1px solid var(--border);
+        border-radius:16px;
+        padding:15px;
+        font-family:Inter;
+        outline:none;
+      }
+
+      footer{
+        background:#061523;
+        color:white;
+        padding:34px 0;
+      }
+
+      .footer{
+        display:flex;
+        justify-content:space-between;
+        gap:20px;
+        flex-wrap:wrap;
+        color:#cbd5e1;
+      }
+
+      .reveal{
+        opacity:0;
+        transform:translateY(26px);
+        transition:.75s ease;
+      }
+
+      .reveal.active{
+        opacity:1;
+        transform:translateY(0);
+      }
+
+      @media(max-width:990px){
+        h1{font-size:44px}
+        .hero-grid,.invest-box,.contact-grid{grid-template-columns:1fr}
+        .grid-3{grid-template-columns:1fr}
+        .process{grid-template-columns:1fr 1fr}
+        .product-grid{grid-template-columns:1fr 1fr}
+        .nav-links{display:none}
+      }
+
+      @media(max-width:560px){
+        .product-grid,.metric-grid,.process{grid-template-columns:1fr}
+        .invest-box{padding:30px}
+        .section-head h2{font-size:34px}
+      }
+
+  body
+    nav.nav
+      a.logo(href="#")
+        .logo-mark S
+        span Squalo Footwears
+      .nav-links
+        a(href="#model") Model
+        a(href="#brands") Brands
+        a(href="#catalogue") Catalogue
+        a(href="#invest") Factory Outlet
+        a.btn.btn-primary(href="#contact") Partner With Us
+
+    main
+      section.hero
+        .container
+          .hero-grid
+            div.reveal
+              .badge Tech-enabled footwear distribution • Faridabad & NCR
+              h1 Building a smarter #[span.gradient-text footwear supply chain] for retailers.
+              p.lead Squalo Footwears connects brands, warehouse stock, retail outlets and dealers through a technology-first distribution network. Our goal is simple: help every connected retail counter maintain the right stock, bill faster, manage credit and earn higher profit.
+              .hero-actions
+                a.btn.btn-primary(href="#invest") Invest in Factory Outlet
+                a.btn.btn-light(href="#catalogue") View Product Range
+
+            .dashboard-card.reveal
+              .mini-header
+                b Live Network Intelligence
+                .pulse
+              .metric-grid
+                .metric
+                  span Retail Stock Planning
+                  h3 AI Assisted
+                .metric
+                  span Credit Cycle
+                  h3 28 Days
+                .metric
+                  span Distribution Focus
+                  h3 NCR
+                .metric
+                  span Brands
+                  h3 2 Active
+              .flow-card
+                .flow-row
+                  span Brand Purchase
+                  span Stock-In
+                .flow-row
+                  span Squalo Warehouse
+                  span Allocation
+                .flow-row
+                  span Retail Outlet
+                  span Billing
+                .flow-row
+                  span Ledger + Payment
+                  span Control
+
+      section#model
+        .container
+          .section-head.reveal
+            h2 One network. Three connected business flows.
+            p We are building a platform where distribution, retail outlets and dealer operations work together through inventory, billing and ledger intelligence.
+
+          .grid-3
+            .smart-card.reveal
+              .icon 📦
+              h3 Distribution Network
+              p Squalo purchases stock from trusted brands and distributes it across Faridabad, NCR, wholesale parties and retail counters.
+
+            .smart-card.reveal
+              .icon 🏬
+              h3 Factory Outlet Chain
+              p Retail outlets can be operated under Squalo systems with billing, stock movement, GST invoices, credit tracking and reorder alerts.
+
+            .smart-card.reveal
+              .icon 🧠
+              h3 Inventory Intelligence
+              p Our ERP learns what sells, what blocks capital and what should be maintained in every outlet to maximise profitability.
+
+      section.dark
+        .container
+          .section-head.reveal
+            h2 How Squalo Works
+            p From factory supply to final retail billing, the complete flow stays connected.
+
+          .process
+            .process-step.reveal
+              b 01
+              h4 Brand Supply
+              p Indus Footprints and Lakhani Aayushman stock enters Squalo warehouse.
+            .process-step.reveal
+              b 02
+              h4 Central Inventory
+              p Stock is categorised by brand, article, color, MRP and purchase cost.
+            .process-step.reveal
+              b 03
+              h4 Outlet Allocation
+              p Products are billed or transferred to retail counters based on demand.
+            .process-step.reveal
+              b 04
+              h4 Retail Billing
+              p Outlets bill only available stock and generate proper GST invoices.
+            .process-step.reveal
+              b 05
+              h4 Smart Reorder
+              p System suggests what to reorder, transfer or discount.
+
+      section#brands
+        .container
+          .section-head.reveal
+            h2 Brands under distribution
+            p We currently handle distribution for two footwear brands with strong retail potential.
+
+          .grid-3
+            .smart-card.reveal
+              .icon 👟
+              h3 Indus Footprints
+              p Sports, casual and daily wear footwear range for retail counters and factory outlets.
+
+            .smart-card.reveal
+              .icon 🥿
+              h3 Lakhani Aayushman
+              p School shoes, formal shoes, safety shoes and mass-market footwear categories.
+
+            .smart-card.reveal
+              .icon ➕
+              h3 Expanding Portfolio
+              p More brands and high-demand footwear categories can be added as the network expands.
+
+      section#catalogue.catalogue
+        .container
+          .section-head.reveal
+            h2 Product visibility without online shopping complexity.
+            p Website catalogue will display available product range. Enquiries and orders will be routed through our team or partner app.
+
+          .catalogue-toolbar.reveal
+            button.chip.active(data-filter="all") All
+            button.chip(data-filter="indus") Indus
+            button.chip(data-filter="lakhani") Lakhani
+            button.chip(data-filter="school") School
+            button.chip(data-filter="safety") Safety
+
+          .product-grid
+            .product.reveal(data-brand="indus")
+              .product-img 👟
+              .product-body
+                h4 Indus Sports Range
+                p Active and daily wear footwear.
+                span.tag INDUS
+                span.tag SPORTS
+            .product.reveal(data-brand="lakhani school")
+              .product-img 🥿
+              .product-body
+                h4 Lakhani School Shoes
+                p High-demand school footwear.
+                span.tag LAKHANI
+                span.tag SCHOOL
+            .product.reveal(data-brand="indus")
+              .product-img 🩴
+              .product-body
+                h4 Floaters & Sandals
+                p Seasonal fast-moving products.
+                span.tag RETAIL
+                span.tag SUMMER
+            .product.reveal(data-brand="lakhani safety")
+              .product-img 🥾
+              .product-body
+                h4 Safety Footwear
+                p Workwear and industrial range.
+                span.tag SAFETY
+                span.tag BULK
+
+      section#invest
+        .container
+          .invest-box.reveal
+            div
+              h2 Invest or partner in a Squalo-powered factory outlet.
+              p We are creating a retail outlet model backed by organised stock supply, billing software, GST invoice support, 28-day credit discipline and smart replenishment analytics.
+              .hero-actions
+                a.btn.btn-light(href="#contact") Discuss Outlet Opportunity
+                a.btn.btn-primary(style="background:#fff;color:#0877ff!important", href="#model") Understand Model
+
+            .invest-list
+              div ✔ Squalo-backed supply chain
+              div ✔ Store billing and inventory system
+              div ✔ Retail product planning
+              div ✔ Credit and ledger control
+              div ✔ Fast mover and dead stock reports
+              div ✔ NCR-focused expansion strategy
+
+      section#contact.contact
+        .container
+          .section-head.reveal
+            h2 Build with Squalo
+            p For retail outlet investment, dealership, catalogue access or distribution enquiry, connect with our team.
+
+          .contact-grid
+            .contact-card.reveal
+              h3(style="margin-top:0;font-weight:900") Squalo Footwears
+              p Faridabad, Haryana
+              p Distribution focus: Faridabad, Delhi NCR, Gurugram, Noida, Ghaziabad, Palwal
+              p
+                b Phone:
+                |  +91 8800558497
+              p
+                b Email:
+                |  squalofootwears@gmail.com
+
+            .contact-card.reveal
+              form.form
+                input(type="text", placeholder="Your Name")
+                input(type="text", placeholder="Business / Investor Name")
+                input(type="tel", placeholder="Phone / WhatsApp")
+                select
+                  option I am interested in
+                  option Factory Outlet Investment
+                  option Retail Partnership
+                  option Product Catalogue
+                  option Distribution Discussion
+                textarea(rows="4", placeholder="Tell us your requirement")
+                a.btn.btn-primary(href="https://wa.me/918800558497", target="_blank") Send Enquiry on WhatsApp
+
+    footer
+      .container
+        .footer
+          div
+            b Squalo Footwears
+            div Building a tech-enabled footwear distribution network.
+          div
+            span Faridabad • NCR • Retail Network • Distribution
+
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script.
+      $(function(){
+
+        function revealOnScroll(){
+          $(".reveal").each(function(){
+            var top = $(this).offset().top;
+            var winTop = $(window).scrollTop();
+            var winH = $(window).height();
+
+            if(top < winTop + winH - 80){
+              $(this).addClass("active");
+            }
+          });
+        }
+
+        revealOnScroll();
+        $(window).on("scroll", revealOnScroll);
+
+        $(".chip").on("click", function(){
+          $(".chip").removeClass("active");
+          $(this).addClass("active");
+
+          var filter = $(this).data("filter");
+
+          $(".product").each(function(){
+            var brand = $(this).data("brand") || "";
+
+            if(filter === "all" || brand.indexOf(filter) !== -1){
+              $(this).fadeIn(180);
+            } else {
+              $(this).fadeOut(180);
+            }
+          });
+        });
+
+        $("a[href^='#']").on("click", function(e){
+          var target = $($(this).attr("href"));
+          if(target.length){
+            e.preventDefault();
+            $("html,body").animate({
+              scrollTop: target.offset().top - 90
+            }, 550);
+          }
+        });
+
+      });

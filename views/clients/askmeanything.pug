@@ -1,0 +1,148 @@
+doctype html
+html(dir='ltr', lang='en-US')
+  include ./partials/head.pug  
+  style.
+    .gradient-custom {
+      background: #fccb90;
+      background: -webkit-linear-gradient(to bottom right, rgba(252, 203, 144, 1), rgba(213, 126, 235, 1));
+      background: linear-gradient(to bottom right, rgba(252, 203, 144, 1), rgba(213, 126, 235, 1))
+    }
+    .mask-custom {
+      background: rgba(24, 24, 16, .2);
+      border-radius: 2em;
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.05);
+      background-clip: padding-box;
+      box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
+    }
+  body.stretched
+    #wrapper.clearfix
+      include ./partials/topnav.pug      
+      section.gradient-custom
+        .container.py-5
+          .row
+            .col-md-6.col-lg-5.col-xl-5.mb-4.mb-md-0
+              h5.font-weight-bold.mb-3.text-center.text-white Member
+              .card.mask-custom
+                .card-body
+                  ul.list-unstyled.mb-0
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 John Doe
+                            p.small.text-white Hello, Are you there?
+                        .pt-1
+                          p.small.text-white.mb-1 Just now
+                          span.badge.bg-danger.float-end 1
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Danny Smith
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 5 mins ago
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Alex Steward
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 Yesterday
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-3.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Ashley Olsen
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 Yesterday
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-4.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Kate Moss
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 Yesterday
+                    li.p-2.border-bottom(style='border-bottom: 1px solid rgba(255,255,255,.3) !important;')
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Lara Croft
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 Yesterday
+                    li.p-2
+                      a.d-flex.justify-content-between.link-light(href='#!')
+                        .d-flex.flex-row
+                          img.rounded-circle.d-flex.align-self-center.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp' alt='avatar' width='60')
+                          .pt-1
+                            p.fw-bold.mb-0 Brad Pitt
+                            p.small.text-white Lorem ipsum dolor sit.
+                        .pt-1
+                          p.small.text-white.mb-1 5 mins ago
+                          span.text-white.float-end
+                            i.fas.fa-check(aria-hidden='true')
+            .col-md-6.col-lg-7.col-xl-7
+              ul.list-unstyled.text-white
+                li.d-flex.justify-content-between.mb-4
+                  img.rounded-circle.d-flex.align-self-start.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp' alt='avatar' width='60')
+                  .card.mask-custom
+                    .card-header.d-flex.justify-content-between.p-3(style='border-bottom: 1px solid rgba(255,255,255,.3);')
+                      p.fw-bold.mb-0 Brad Pitt
+                      p.text-light.small.mb-0
+                        i.far.fa-clock
+                        |  12 mins ago
+                    .card-body
+                      p.mb-0
+                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        | labore et dolore magna aliqua.
+                li.d-flex.justify-content-between.mb-4
+                  .card.mask-custom.w-100
+                    .card-header.d-flex.justify-content-between.p-3(style='border-bottom: 1px solid rgba(255,255,255,.3);')
+                      p.fw-bold.mb-0 Lara Croft
+                      p.text-light.small.mb-0
+                        i.far.fa-clock
+                        |  13 mins ago
+                    .card-body
+                      p.mb-0
+                        | Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+                        | laudantium.
+                  img.rounded-circle.d-flex.align-self-start.ms-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp' alt='avatar' width='60')
+                li.d-flex.justify-content-between.mb-4
+                  img.rounded-circle.d-flex.align-self-start.me-3.shadow-1-strong(src='https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp' alt='avatar' width='60')
+                  .card.mask-custom
+                    .card-header.d-flex.justify-content-between.p-3(style='border-bottom: 1px solid rgba(255,255,255,.3);')
+                      p.fw-bold.mb-0 Brad Pitt
+                      p.text-light.small.mb-0
+                        i.far.fa-clock
+                        |  10 mins ago
+                    .card-body
+                      p.mb-0
+                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        | labore et dolore magna aliqua.
+                li.mb-3
+                  .form-outline.form-white
+                    textarea#textAreaExample3.form-control(rows='4')
+                    label.form-label(for='textAreaExample3') Message
+                button.btn.btn-light.btn-lg.btn-rounded.float-end(type='button') Send
+
+
+
+    #gotoTop.icon-angle-up
+    script(src='/js/jquery.js')
+    script(src='/js/plugins.min.js')
+    script(src='/js/functions.js')
+    script(src="/rpanel/js/client/logout.js" type="text/javascript")
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js')
+    script(src='/rpanel/js/client/askme.js')
+    

@@ -1,0 +1,159 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title Stores
+                  .kt-portlet__head-toolbar
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalStoreCreate")
+                      i.la.la-plus
+                      |  Add Store
+
+                .kt-portlet__body(style="padding-top:0")
+                  .kt-form.kt-form--label-right.kt-margin-t-20.kt-margin-b-10
+                    .row.align-items-center
+                      .col-xl-6.order-2.order-xl-1
+                        .kt-input-icon.kt-input-icon--left
+                          input#generalSearch.form-control(type="text", placeholder="Search stores...")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            span
+                              i.la.la-search
+
+                  table#storesTable.table.table-striped.table-bordered.table-hover.table-checkable
+                    thead
+                      tr
+                        th Code
+                        th Name
+                        th Type
+                        th City
+                        th Active
+                        th Actions
+                    tbody
+
+          include ../partials/footer.pug
+
+    // CREATE STORE MODAL
+    #modalStoreCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Add Store
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#storeCreateForm
+              .form-group
+                label Code (Unique)
+                input#store_code.form-control(type="text" placeholder="DL-SHOP-01" required)
+              .form-group
+                label Name
+                input#store_name.form-control(type="text" placeholder="Ballabhgarh Metro Store" required)
+              .form-group
+                label Type
+                select#store_type.form-control
+                  option(value="RETAIL" selected) RETAIL
+                  option(value="GODOWN") GODOWN
+                  option(value="WAREHOUSE") WAREHOUSE
+              hr
+              .form-group
+                label Address Line 1
+                input#store_addr1.form-control(type="text" placeholder="Street / Market / Metro...")
+              .row
+                .col-md-6
+                  .form-group
+                    label City
+                    input#store_city.form-control(type="text" placeholder="Delhi")
+                .col-md-6
+                  .form-group
+                    label State
+                    input#store_state.form-control(type="text" placeholder="Delhi")
+              .form-group
+                label Pincode
+                input#store_pincode.form-control(type="text" placeholder="110001")
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#btnCreateStore.btn.btn-brand(type="submit", form="storeCreateForm") Save
+
+    // UPDATE STORE MODAL
+    #modalStoreEdit.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Update Store
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#storeEditForm
+              input#edit_store_id(type="hidden")
+              .form-group
+                label Code (Unique)
+                input#edit_store_code.form-control(type="text" required)
+              .form-group
+                label Name
+                input#edit_store_name.form-control(type="text" required)
+              .form-group
+                label Type
+                select#edit_store_type.form-control
+                  option(value="RETAIL") RETAIL
+                  option(value="GODOWN") GODOWN
+                  option(value="WAREHOUSE") WAREHOUSE
+              .form-group
+                label Active
+                select#edit_store_active.form-control
+                  option(value="true") Yes
+                  option(value="false") No
+              hr
+              .form-group
+                label Address Line 1
+                input#edit_store_addr1.form-control(type="text")
+              .row
+                .col-md-6
+                  .form-group
+                    label City
+                    input#edit_store_city.form-control(type="text")
+                .col-md-6
+                  .form-group
+                    label State
+                    input#edit_store_state.form-control(type="text")
+              .form-group
+                label Pincode
+                input#edit_store_pincode.form-control(type="text")
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#btnUpdateStore.btn.btn-brand(type="submit", form="storeEditForm") Update
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+
+    // ✅ ONE JS FILE ONLY for Stores page
+    script(src="/rpanel/js/footwear/su/stores-ui.js" type="text/javascript")

@@ -1,0 +1,146 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title SKUs
+                  .kt-portlet__head-toolbar
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalBulkCreate")
+                      i.la.la-th-large
+                      |  Bulk Matrix Create
+
+                .kt-portlet__body(style="padding-top:0")
+                  .kt-form.kt-form--label-right.kt-margin-t-20.kt-margin-b-10
+                    .row.align-items-center
+                      .col-md-3
+                        label.mb-1 Category Group
+                        select#filter_categoryGroup.form-control
+                          option(value="") All Groups
+                          option(value="MEN") MEN
+                          option(value="WOMEN") WOMEN
+                          option(value="KIDS") KIDS
+                          option(value="UNISEX") UNISEX
+
+                      .col-md-3
+                        label.mb-1 Category
+                        select#filter_category.form-control(disabled)
+                          option(value="") All Categories
+
+                      .col-md-3
+                        label.mb-1 Brand
+                        input#filter_brand.form-control(type="text" placeholder="CLD / INDUS")
+
+                      .col-md-3.mt-4
+                        button#btnClearFilters.btn.btn-sm.btn-secondary(type="button") Clear Filters  
+                    br                        
+                    .row.align-items-center
+                      .col-xl-6
+                        .kt-input-icon.kt-input-icon--left
+                          input#generalSearch.form-control(type="text", placeholder="Search SKU / Article / Color / Size")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            i.la.la-search
+
+                  table#skusTable.table.table-striped.table-bordered.table-hover
+                    thead
+                      tr
+                        th SKU Code
+                        th Brand
+                        th Article
+                        th Color
+                        th Size
+                        th Category
+                        th Actions
+                    tbody
+
+          include ../partials/footer.pug
+
+    // BULK MATRIX MODAL
+    #modalBulkCreate.modal.fade(tabindex="-1")
+      .modal-dialog.modal-md
+        .modal-content
+          .modal-header
+            h5.modal-title Bulk SKU Matrix
+            button.close(data-dismiss="modal")
+          .modal-body
+            form#bulkMatrixForm
+              .form-group
+                label Article
+                select#bm_article.form-control(required)
+                  option(value="" disabled selected) Select Article
+
+              .form-group
+                label Colors (comma separated)
+                input#bm_colors.form-control(placeholder="BLK/WHT, RED/BLK")
+
+              .form-group
+                label Sizes (comma separated)
+                input#bm_sizes.form-control(placeholder="6,7,8,9,10")
+
+            .modal-footer
+              button.btn.btn-secondary(data-dismiss="modal") Cancel
+              button.btn.btn-brand(type="submit", form="bulkMatrixForm") Create SKUs
+
+    // EDIT SKU MODAL
+    #modalSkuEdit.modal.fade(tabindex="-1")
+      .modal-dialog.modal-md
+        .modal-content
+          .modal-header
+            h5.modal-title Edit SKU
+            button.close(data-dismiss="modal")
+          .modal-body
+            form#skuEditForm
+              input#edit_sku_id(type="hidden")
+
+              .form-group
+                label SKU Code
+                input#edit_sku_code.form-control(readonly)
+
+              .row
+                .col-md-6
+                  .form-group
+                    label Color
+                    input#edit_sku_color.form-control
+                .col-md-6
+                  .form-group
+                    label Size
+                    input#edit_sku_size.form-control
+
+              .form-group
+                label Active
+                select#edit_sku_active.form-control
+                  option(value="true") Yes
+                  option(value="false") No
+
+          .modal-footer
+            button.btn.btn-secondary(data-dismiss="modal") Cancel
+            button.btn.btn-brand(type="submit") Update
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js")
+    script(src="/assets/js/scripts.bundle.js")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css")
+    script(src="/rpanel/js/footwear/su/skus-ui.js")

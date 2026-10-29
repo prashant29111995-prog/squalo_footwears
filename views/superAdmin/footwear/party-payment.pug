@@ -1,0 +1,77 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title Party Ledger
+                  .kt-portlet__head-toolbar
+                    a.btn.btn-outline-brand.btn-sm(href="/rpanel/footwear/parties")
+                      i.la.la-arrow-left
+                      |  Back to Parties
+
+                .kt-portlet__body(style="padding-top:0")
+                  input#partyId(type="hidden" value=partyId)
+
+                  .kt-form.kt-form--label-right.kt-margin-t-20.kt-margin-b-10
+                    .row
+                      .col-md-4
+                        .form-group
+                          label Party
+                          input#partyName.form-control(readonly)
+                      .col-md-4
+                        .form-group
+                          label Phone
+                          input#partyPhone.form-control(readonly)
+                      .col-md-4
+                        .form-group
+                          label Current Balance
+                          input#partyBalance.form-control(readonly)
+
+                    .row.align-items-center
+                      .col-md-3
+                        input#filter_from.form-control(type="date")
+                      .col-md-3
+                        input#filter_to.form-control(type="date")
+                      .col-md-3
+                        select#filter_type.form-control
+                          option(value="") All Types
+                          option(value="BILL") BILL
+                          option(value="PAYMENT") PAYMENT
+                          option(value="RETURN") RETURN
+                          option(value="ADJUSTMENT") ADJUSTMENT
+                      .col-md-3.text-right
+                        button#btnClear.btn.btn-outline-secondary.btn-sm(type="button") Clear
+
+                  table#ledgerTable.table.table-striped.table-bordered.table-hover
+                    thead
+                      tr
+                        th Date
+                        th Type
+                        th Ref
+                        th Debit
+                        th Credit
+                        th Balance
+                        th Notes
+                    tbody
+
+          include ../partials/footer.pug
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="/rpanel/js/footwear/su/party-ledger-ui.js" type="text/javascript")

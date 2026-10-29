@@ -1,0 +1,88 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title Store Locations
+                  .kt-portlet__head-toolbar
+                    a.btn.btn-secondary.btn-sm(href="/su/footwear/stores")
+                      i.la.la-arrow-left
+                      |  Back
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalLocationCreate")
+                      i.la.la-plus
+                      |  Add Location
+
+                .kt-portlet__body(style="padding-top:0")
+                  table#locationsTable.table.table-striped.table-bordered.table-hover.table-checkable
+                    thead
+                      tr
+                        th Name
+                        th Code
+                        th Active
+                        th Actions
+                    tbody
+
+          include ../partials/footer.pug
+
+    // CREATE/EDIT LOCATION MODAL
+    #modalLocationCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-md(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Location
+            button.close(type="button", data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+          .modal-body
+            form#locationForm
+              input#loc_id(type="hidden")
+              .form-group
+                label Name *
+                input#loc_name.form-control(type="text" placeholder="BASEMENT / SHOP FLOOR" required)
+              .form-group
+                label Code (optional)
+                input#loc_code.form-control(type="text" placeholder="B1 / SF")
+              .form-group
+                label Active
+                select#loc_active.form-control
+                  option(value="true" selected) Yes
+                  option(value="false") No
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
+            button#btnSaveLocation.btn.btn-brand(type="submit", form="locationForm") Save
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
+    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+
+    script.
+      window.__STORE_ID__ = "#{storeId}";
+    script(src="/rpanel/js/footwear/su/store-locations-ui.js" type="text/javascript")

@@ -1,0 +1,420 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  style.
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:600;
+      border:1px solid #ebedf3;
+      background:#fff;
+    }
+    .chip b{ font-weight:900; }
+    .chip--light{ background:#f8f9fb; }
+    .chip--pos{
+      border-color:rgba(52,191,163,.35);
+      background:rgba(52,191,163,.08);
+    }
+    .chip--neg{
+      border-color:rgba(253,57,149,.25);
+      background:rgba(253,57,149,.06);
+    }
+    .chip--info{
+      border-color:rgba(54,163,247,.25);
+      background:rgba(54,163,247,.06);
+    }
+    .table-responsive{
+      border:1px solid #ebedf3;
+      border-radius:8px;
+      overflow:auto;
+    }
+    .tbl-compact td,
+    .tbl-compact th{
+      padding:.7rem .7rem;
+      vertical-align:middle;
+      white-space:nowrap;
+      font-size:13px;
+    }
+    .tbl-compact th{
+      font-weight:700;
+      background:#f8f9fb;
+    }
+    .sticky-actions{ white-space:nowrap; }
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .legend-note{
+      font-size:12px;
+      opacity:.7;
+    }
+    .ledger-help{
+      font-size:12px;
+      color:#74788d;
+      margin-top:4px;
+    }
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
+          i.flaticon-more
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    .d-flex.flex-column
+                      h3.kt-portlet__head-title Stock Ledger
+                      .legend-note Article + Color based live stock balance
+
+                  .kt-portlet__head-toolbar
+                    .header-right
+                      button.btn.btn-sm.btn-outline-secondary(
+                        type="button",
+                        data-toggle="collapse",
+                        data-target="#filtersWrap"
+                      )
+                        i.la.la-filter
+                        |  Filters
+                      button#btnPrintStockList.btn.btn-sm.btn-outline-dark(type="button")
+                        i.la.la-print
+                        |  Print Stock List
+
+                      button#btnExportImages.btn.btn-sm.btn-outline-success(type="button")
+                        i.la.la-image
+                        |  Export Images
+
+                      button.btn.btn-brand.btn-sm(
+                        type="button",
+                        data-toggle="modal",
+                        data-target="#modalLedgerCreate"
+                      )
+                        i.la.la-plus
+                        |  Add Ledger Entry
+
+                .kt-portlet__body(style="padding-top:0")
+                  .row.mt-3
+                    .col-md-12
+                      .d-flex.flex-wrap(style="gap:10px")
+                        span.chip.chip--light
+                          | Net Qty:
+                          b#sum_totalLines 0
+
+                        span.chip.chip--pos
+                          | Total In:
+                          b#sum_positive 0
+
+                        span.chip.chip--neg
+                          | Total Out:
+                          b#sum_negative 0
+
+                        span.chip.chip--info
+                          | Total Moves:
+                          b#sum_moves 0
+
+                  #filtersWrap.collapse.show.mt-4
+                    .kt-form.kt-form--label-right
+                      .row
+                        .col-md-2
+                          label Category Group
+                          select#filter_categoryGroup.form-control
+                            option(value="") All Groups
+                            option(value="MEN") MEN
+                            option(value="WOMEN") WOMEN
+                            option(value="KIDS") KIDS
+                            option(value="UNISEX") UNISEX
+
+                        .col-md-3
+                          label Category
+                          select#filter_category.form-control
+                            option(value="") All Categories
+
+                        .col-md-2
+                          label Brand
+                          input#filter_brand.form-control(
+                            type="text",
+                            placeholder="INDUS"
+                          )
+
+                        .col-md-3
+                          label Article
+                          input#filter_article.form-control(
+                            type="text",
+                            placeholder="33177 / WINFLOW"
+                          )
+
+                        .col-md-2
+                          label Color
+                          input#filter_color.form-control(
+                            type="text",
+                            placeholder="BLUSH"
+                          )
+
+                      .row.mt-3
+                        .col-md-7
+                          label Search
+                          .kt-input-icon.kt-input-icon--left
+                            input#generalSearch.form-control(
+                              type="text",
+                              placeholder="Search brand / article / color..."
+                            )
+                            span.kt-input-icon__icon.kt-input-icon__icon--left
+                              span
+                                i.la.la-search
+
+                        .col-md-5.d-flex.align-items-end.justify-content-end
+                          button#btnClearFilters.btn.btn-outline-secondary.mr-2(type="button")
+                            i.la.la-undo
+                            |  Clear
+
+                          button#btnReload.btn.btn-outline-brand(type="button")
+                            i.la.la-refresh
+                            |  Reload
+
+                  #ledgerWrap.mt-4
+                    .table-responsive
+                      table#balanceTable.table.table-bordered.table-hover.tbl-compact
+                        thead
+                          tr
+                            th Brand
+                            th Article
+                            th Category
+                            th Color
+                            th Stock Qty
+                            th MRP
+                            th Stock Value
+                            th Moves
+                            th Media
+                            th Actions
+
+                        tbody#balanceBody
+                          tr
+                            td.text-center.text-muted(colspan="10") Loading...
+
+                  #ledgerPager.kt-margin-t-20
+                    .row.align-items-center
+                      .col-md-6
+                        .form-inline
+                          label.mr-2 Show
+                          select#pageSize.form-control.form-control-sm(style="width:90px")
+                            option(value="25") 25
+                            option(value="50") 50
+                            option(value="100") 100
+                            option(value="200") 200
+                          span.ml-2 entries
+
+                        div#pagerInfo.text-muted.mt-2
+
+                      .col-md-6.text-right
+                        nav
+                          ul#pagerNav.pagination.pagination-sm.justify-content-end(style="margin:0")
+
+          include ../partials/footer.pug
+
+    // MOVES MODAL
+    #modalMoves.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-xl(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Ledger Moves
+            button.close(type="button", data-dismiss="modal")
+              span ×
+
+          .modal-body
+            #movesMeta.text-muted.mb-3(style="font-size:12px")
+
+            .table-responsive
+              table.table.table-bordered.table-hover.tbl-compact
+                thead
+                  tr
+                    th Date
+                    th Store
+                    th Txn Type
+                    th Qty Δ
+                    th Balance After
+                    th Ref
+                    th Notes
+                    th Actions
+
+                tbody#movesBody
+                  tr
+                    td.text-center.text-muted(colspan="8") Loading...
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal") Close
+
+    // CREATE LEDGER ENTRY MODAL
+    #modalLedgerCreate.modal.fade(role="dialog" tabindex="-1")
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title Add Ledger Entry
+            button.close(type="button", data-dismiss="modal")
+              span ×
+
+          .modal-body
+            form#ledgerCreateForm
+              .alert.alert-light
+                strong Note:
+                |  Use manual ledger entry only for opening stock, adjustment, damage, transfer, or correction. Purchase and Sale should normally come from Stock-In and Billing.
+
+              .row
+                .col-md-6
+                  .form-group
+                    label Store
+                    select#ledger_storeId.form-control(required)
+                      option(value="") Select Store
+
+                .col-md-6
+                  .form-group
+                    label Article
+                    select#ledger_articleId.form-control(required)
+                      option(value="") Search Article
+
+              .row
+                .col-md-4
+                  .form-group
+                    label Brand
+                    input#ledger_brand.form-control(type="text", readonly)
+
+                .col-md-4
+                  .form-group
+                    label Article Name
+                    input#ledger_articleName.form-control(type="text", readonly)
+
+                .col-md-4
+                  .form-group
+                    label Color
+                    input#ledger_color.form-control(
+                      type="text",
+                      placeholder="BLUSH / BLACK / WHT-BK",
+                      required
+                    )
+                    .ledger-help Use same color spelling as stock-in.
+
+              .row
+                .col-md-4
+                  .form-group
+                    label Quantity Delta
+                    input#ledger_qtyDelta.form-control(
+                      type="number",
+                      placeholder="+10 / -5",
+                      required
+                    )
+                    .ledger-help In/return = positive, sale/damage/out = negative.
+
+                .col-md-4
+                  .form-group
+                    label Txn Type
+                    select#ledger_txnType.form-control(required)
+                      option(value="" selected disabled) Select
+                      option(value="OPENING") OPENING
+                      option(value="AUDIT_ADJUSTMENT") AUDIT_ADJUSTMENT
+                      option(value="TRANSFER_IN") TRANSFER_IN
+                      option(value="TRANSFER_OUT") TRANSFER_OUT
+                      option(value="SALE") SALE
+                      option(value="SALE_RETURN") SALE_RETURN
+                      option(value="DAMAGE") DAMAGE
+                      option(value="PURCHASE_IN") PURCHASE_IN
+                      option(value="WHOLESALE_OUT") WHOLESALE_OUT
+
+                .col-md-4
+                  .form-group
+                    label Document No
+                    input#ledger_documentNo.form-control(
+                      type="text",
+                      placeholder="Invoice / Ref"
+                    )
+
+              .form-group
+                label Notes
+                textarea#ledger_note.form-control(
+                  rows="2",
+                  placeholder="Reason / note..."
+                )
+
+          .modal-footer
+            button.btn.btn-secondary(type="button", data-dismiss="modal")
+              | Cancel
+
+            button#btnCreateLedger.btn.btn-brand(
+              type="submit",
+              form="ledgerCreateForm"
+            )
+              | Save Entry
+    // ARTICLE MEDIA MODAL
+    #modalArticleMedia.modal.fade(tabindex="-1")
+      .modal-dialog.modal-xl
+        .modal-content
+
+          .modal-header
+            h5.modal-title Product Images
+
+            button.close(type="button", data-dismiss="modal")
+              span ×
+
+          .modal-body
+            input#media_articleId(type="hidden")
+            input#media_color(type="hidden")
+
+            .d-flex.justify-content-between.align-items-center.mb-4
+              div
+                h4#mediaTitle.mb-1
+                .text-muted(style="font-size:12px")
+                  | Upload product images for WhatsApp/catalog sharing
+
+            .card.mb-4
+              .card-body
+                .row.align-items-end
+                  .col-md-9
+                    label Upload Images
+                    input#mediaFiles.form-control(
+                      type="file"
+                      multiple
+                      accept="image/*"
+                    )
+
+                  .col-md-3
+                    button#btnUploadMedia.btn.btn-brand.btn-block(type="button")
+                      i.la.la-upload
+                      |  Upload
+
+            .row#mediaGallery
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js")
+    script(src="/assets/js/scripts.bundle.js")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css")
+    script(src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js")
+
+    script(src="/rpanel/js/footwear/su/stock-ledger-ui.js")

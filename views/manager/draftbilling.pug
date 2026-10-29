@@ -1,0 +1,414 @@
+doctype html
+html(lang="en")
+  include ./partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed
+    // begin:: Header Mobile
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="/")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+      .kt-header-mobile__toolbar
+        button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left(type="button")
+          span
+        button#kt_header_mobile_toggler.kt-header-mobile__toggler(type="button")
+          span
+        button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler(type="button")
+          i.flaticon-more
+    // end:: Header Mobile
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ./partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ./partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ./partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .row
+                .col-xl-8.col-lg-12
+                  .kt-portlet.kt-portlet--mobile
+                    .kt-portlet__head
+                      .kt-portlet__head-label
+                        h3.kt-portlet__head-title Billing Counter
+                      .kt-portlet__head-toolbar
+                        .btn-group
+                          button#newBillBtn.btn.btn-outline-brand.btn-sm(type="button")
+                            i.la.la-file
+                            |  New Bill
+                          button#holdBillBtn.btn.btn-outline-warning.btn-sm(type="button")
+                            i.la.la-pause
+                            |  Hold
+                          button#loadHeldBillBtn.btn.btn-outline-info.btn-sm(type="button")
+                            i.la.la-folder-open
+                            |  Held Bills
+
+                    .kt-portlet__body
+                      .row
+                        .col-md-4
+                          .form-group
+                            label Bill No
+                            input#billNo.form-control(type="text" value=(billNo || "AUTO") readonly)
+                        .col-md-4
+                          .form-group
+                            label Billing Date
+                            input#billDate.form-control(type="date" value=(billDate || ""))
+                        .col-md-4
+                          .form-group
+                            label Store / Counter
+                            select#storeId.form-control
+                              option(value="") Select store
+                              each store in (stores || [])
+                                option(value=store._id selected=(selectedStoreId && String(selectedStoreId) === String(store._id)))= store.name
+
+                      .row
+                        .col-md-8
+                          .form-group
+                            label Customer / Party
+                            .input-group
+                              select#partyId.form-control
+                                option(value="") Walk-in Customer
+                                each party in (parties || [])
+                                  option(value=party._id)= `${party.name}${party.phone ? ' - ' + party.phone : ''}`
+                              .input-group-append
+                                button#addPartyBtn.btn.btn-outline-brand(type="button" data-toggle="modal" data-target="#quickPartyModal")
+                                  i.la.la-plus
+                        .col-md-4
+                          .form-group
+                            label Payment Mode
+                            select#paymentMode.form-control
+                              option(value="CASH") Cash
+                              option(value="UPI") UPI
+                              option(value="CARD") Card
+                              option(value="CREDIT") Credit
+
+                      .row
+                        .col-12
+                          .billing-search-bar.mb-4
+                            label.mb-2 Fast Product Search
+                            .input-group.input-group-lg
+                              input#productSearch.form-control(type="text" placeholder="Search by SKU / article / color / barcode and press Enter" autocomplete="off" autofocus)
+                              .input-group-append
+                                button#scanSkuBtn.btn.btn-outline-primary(type="button")
+                                  i.la.la-barcode
+                                  |  Scan / SKU
+                                button#openPickerBtn.btn.btn-brand(type="button" data-toggle="modal" data-target="#productPickerModal")
+                                  i.la.la-search
+                                  |  Browse Products
+                            small.form-text.text-muted Keyboard flow: search → Enter → select size/qty → add to bill
+
+                      .row.mb-4
+                        .col-md-4
+                          .kt-portlet.kt-portlet--height-fluid-half
+                            .kt-portlet__head
+                              .kt-portlet__head-label
+                                h3.kt-portlet__head-title Selected Product
+                            .kt-portlet__body
+                              .text-center.mb-3
+                                img#selectedProductImage(src=(selectedProduct && selectedProduct.imageUrl) || "/assets/media/products/default-product.png" alt="Product Image" style="max-width:100%; height:220px; object-fit:contain; border:1px solid #ececec; border-radius:8px; padding:8px;")
+                              .mb-2
+                                h5#selectedProductTitle.mb-1= (selectedProduct && selectedProduct.displayName) || 'No product selected'
+                                p#selectedProductMeta.text-muted.mb-0= (selectedProduct && selectedProduct.skuCode) || 'Search and pick a product to start billing'
+                              hr
+                              .row
+                                .col-6
+                                  .form-group.mb-2
+                                    label Brand
+                                    input#selectedBrand.form-control(type="text" readonly value=(selectedProduct && selectedProduct.brand) || "")
+                                .col-6
+                                  .form-group.mb-2
+                                    label Article
+                                    input#selectedArticle.form-control(type="text" readonly value=(selectedProduct && selectedProduct.articleName) || "")
+                              .row
+                                .col-6
+                                  .form-group.mb-2
+                                    label Color
+                                    input#selectedColor.form-control(type="text" readonly value=(selectedProduct && selectedProduct.color) || "")
+                                .col-6
+                                  .form-group.mb-2
+                                    label Available Stock
+                                    input#selectedStock.form-control(type="text" readonly value=(selectedProduct ? selectedProduct.availableQty : ""))
+                              .row
+                                .col-4
+                                  .form-group.mb-2
+                                    label Size
+                                    select#selectedSize.form-control
+                                      option(value="") Select
+                                      each size in (selectedProductSizes || [])
+                                        option(value=size)= size
+                                .col-4
+                                  .form-group.mb-2
+                                    label Rate
+                                    input#selectedRate.form-control(type="number" min="0" step="0.01" value=(selectedProduct && selectedProduct.salePrice) || "")
+                                .col-4
+                                  .form-group.mb-2
+                                    label Qty
+                                    input#selectedQty.form-control(type="number" min="1" step="1" value="1")
+                              .row
+                                .col-12
+                                  button#addSelectedProductBtn.btn.btn-success.btn-block(type="button")
+                                    i.la.la-plus-circle
+                                    |  Add To Bill
+
+                        .col-md-8
+                          .kt-portlet.kt-portlet--height-fluid-half
+                            .kt-portlet__head
+                              .kt-portlet__head-label
+                                h3.kt-portlet__head-title Current Bill Items
+                              .kt-portlet__head-toolbar
+                                .btn-group
+                                  button#clearBillBtn.btn.btn-outline-danger.btn-sm(type="button")
+                                    i.la.la-trash
+                                    |  Clear Bill
+                                  button#refreshStockBtn.btn.btn-outline-secondary.btn-sm(type="button")
+                                    i.la.la-refresh
+                                    |  Refresh Stock
+                            .kt-portlet__body(style="padding-top:0;")
+                              .table-responsive
+                                table#billItemsTable.table.table-striped.table-bordered.table-hover.mb-0
+                                  thead
+                                    tr
+                                      th(style="width:60px") #
+                                      th Product
+                                      th Color
+                                      th Size
+                                      th.text-right Qty
+                                      th.text-right Rate
+                                      th.text-right Amount
+                                      th(style="width:130px") Action
+                                  tbody
+                                    if bill && bill.items && bill.items.length
+                                      each item, idx in bill.items
+                                        tr(data-line-id=item._id || idx)
+                                          td= idx + 1
+                                          td
+                                            .font-weight-bold= item.articleName || item.skuCode
+                                            if item.skuCode
+                                              .text-muted.small= item.skuCode
+                                          td= item.color || '-'
+                                          td= item.size || '-'
+                                          td.text-right= item.qty || 0
+                                          td.text-right= item.rate || 0
+                                          td.text-right= item.amount || 0
+                                          td
+                                            .btn-group.btn-group-sm
+                                              button.btn.btn-outline-primary.edit-line(type="button") Edit
+                                              button.btn.btn-outline-danger.remove-line(type="button") Remove
+                                    else
+                                      tr
+                                        td.text-center.text-muted(colspan="8") No items added yet
+
+                      .row
+                        .col-lg-4
+                          .kt-portlet.kt-portlet--height-fluid
+                            .kt-portlet__head
+                              .kt-portlet__head-label
+                                h3.kt-portlet__head-title Recent / Fast Moving
+                            .kt-portlet__body
+                              #recentSkuList.list-group.list-group-flush
+                                if recentProducts && recentProducts.length
+                                  each p in recentProducts
+                                    button.list-group-item.list-group-item-action.recent-product-item(type="button", data-sku=p.skuCode, data-variant-id=p.variantId)
+                                    button.list-group-item.list-group-item-action.recent-product-item(type="button", data-sku=p.skuCode, data-variant-id=p.variantId)
+                                      .d-flex.justify-content-between.align-items-start
+                                        div
+                                          .font-weight-bold= p.displayName || p.articleName
+                                          .text-muted.small= `${p.color || ''}${p.color && p.skuCode ? ' • ' : ''}${p.skuCode || ''}`
+                                        span.badge.badge-info.badge-pill= p.availableQty || 0
+                                else
+                                  .text-muted No recent products yet
+
+                        .col-lg-4
+                          .kt-portlet.kt-portlet--height-fluid
+                            .kt-portlet__head
+                              .kt-portlet__head-label
+                                h3.kt-portlet__head-title Stock Alerts
+                            .kt-portlet__body
+                              ul#stockAlertsList.list-group.list-group-flush
+                                if stockAlerts && stockAlerts.length
+                                  each alert in stockAlerts
+                                    li.list-group-item.d-flex.justify-content-between.align-items-center
+                                      span= `${alert.articleName} - ${alert.color} - ${alert.size}`
+                                      if alert.availableQty <= 0
+                                        span.badge.badge-danger Out
+                                      else
+                                        span.badge.badge-warning= alert.availableQty
+                                else
+                                  li.list-group-item.text-muted No low stock alerts
+
+                        .col-lg-4
+                          .kt-portlet.kt-portlet--height-fluid
+                            .kt-portlet__head
+                              .kt-portlet__head-label
+                                h3.kt-portlet__head-title Bill Notes
+                            .kt-portlet__body
+                              .form-group
+                                label Remarks
+                                textarea#billRemarks.form-control(rows="6" placeholder="Optional remarks, delivery note, sales note")= (bill && bill.remarks) || ''
+                              .form-group.mb-0
+                                label Internal Note
+                                textarea#billInternalNote.form-control(rows="4" placeholder="Shown only to manager / back office")= (bill && bill.internalNote) || ''
+
+                .col-xl-4.col-lg-12
+                  .kt-portlet.kt-portlet--mobile.kt-sticky-portlet
+                    .kt-portlet__head
+                      .kt-portlet__head-label
+                        h3.kt-portlet__head-title Bill Summary
+                    .kt-portlet__body
+                      .row
+                        .col-6
+                          .form-group
+                            label Total Qty
+                            input#summaryTotalQty.form-control(type="number" readonly value=(summary && summary.totalQty) || 0)
+                        .col-6
+                          .form-group
+                            label Total Items
+                            input#summaryTotalLines.form-control(type="number" readonly value=(summary && summary.totalLines) || 0)
+
+                      .form-group
+                        label Subtotal
+                        input#summarySubtotal.form-control(type="number" readonly step="0.01" value=(summary && summary.subtotal) || 0)
+
+                      .row
+                        .col-6
+                          .form-group
+                            label Discount Type
+                            select#discountType.form-control
+                              option(value="AMOUNT" selected=((summary && summary.discountType) || 'AMOUNT') === 'AMOUNT') Amount
+                              option(value="PERCENT" selected=((summary && summary.discountType) || '') === 'PERCENT') Percent
+                        .col-6
+                          .form-group
+                            label Discount
+                            input#discountValue.form-control(type="number" min="0" step="0.01" value=(summary && summary.discountValue) || 0)
+
+                      .row
+                        .col-6
+                          .form-group
+                            label GST %
+                            input#gstPercent.form-control(type="number" min="0" step="0.01" value=(summary && summary.gstPercent) || 0)
+                        .col-6
+                          .form-group
+                            label Other Charges
+                            input#otherCharges.form-control(type="number" min="0" step="0.01" value=(summary && summary.otherCharges) || 0)
+
+                      .form-group
+                        label Grand Total
+                        input#summaryGrandTotal.form-control.font-weight-bold(type="number" readonly step="0.01" value=(summary && summary.grandTotal) || 0)
+
+                      .row
+                        .col-6
+                          .form-group
+                            label Received
+                            input#receivedAmount.form-control(type="number" min="0" step="0.01" value=(summary && summary.receivedAmount) || 0)
+                        .col-6
+                          .form-group
+                            label Balance
+                            input#balanceAmount.form-control(type="number" readonly step="0.01" value=(summary && summary.balanceAmount) || 0)
+
+                      hr
+
+                      .d-flex.flex-column
+                        button#saveDraftBillBtn.btn.btn-outline-brand.btn-lg.mb-2(type="button")
+                          i.la.la-save
+                          |  Save Draft
+                        button#printBillBtn.btn.btn-outline-info.btn-lg.mb-2(type="button")
+                          i.la.la-print
+                          |  Print Preview
+                        button#finalizeBillBtn.btn.btn-success.btn-lg.mb-2(type="button")
+                          i.la.la-check-circle
+                          |  Finalize Bill
+                        button#cancelBillBtn.btn.btn-outline-danger.btn-lg(type="button")
+                          i.la.la-times-circle
+                          |  Cancel Bill
+
+                      .alert.alert-light.mt-4.mb-0
+                        .font-weight-bold.mb-1 Counter Tips
+                        ul.mb-0.pl-3
+                          li Press Enter in search to open the top product instantly.
+                          li Use SKU scan for the fastest billing flow.
+                          li Rate and image are color-wise, not article-wise.
+
+          include ./partials/footer.pug
+
+      // Product Picker Modal
+      #productPickerModal.modal.fade(tabindex="-1" role="dialog" aria-hidden="true")
+        .modal-dialog.modal-xl(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Browse Products
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") ×
+            .modal-body
+              .row.mb-3
+                .col-md-3
+                  label Brand
+                  select#pickerBrand.form-control
+                    option(value="") All
+                    each brand in (brands || [])
+                      option(value=brand)= brand
+                .col-md-3
+                  label Category
+                  select#pickerCategory.form-control
+                    option(value="") All
+                    each cat in (categories || [])
+                      option(value=cat)= cat
+                .col-md-3
+                  label Color
+                  input#pickerColor.form-control(type="text" placeholder="BLK / TAN / NAVY")
+                .col-md-3
+                  label Search
+                  input#pickerSearch.form-control(type="text" placeholder="Article / SKU / keyword")
+              .table-responsive
+                table#productPickerTable.table.table-bordered.table-hover
+                  thead
+                    tr
+                      th Image
+                      th Brand
+                      th Article
+                      th Color
+                      th MRP
+                      th Sale Price
+                      th Stock
+                      th Action
+                  tbody
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
+      // Quick Party Modal
+      #quickPartyModal.modal.fade(tabindex="-1" role="dialog" aria-hidden="true")
+        .modal-dialog(role="document")
+          .modal-content
+            .modal-header
+              h5.modal-title Add Customer / Party
+              button.close(type="button" data-dismiss="modal" aria-label="Close")
+                span(aria-hidden="true") ×
+            .modal-body
+              form#quickPartyForm
+                .form-group
+                  label Name
+                  input#quickPartyName.form-control(type="text" placeholder="Customer / retailer name")
+                .form-group
+                  label Phone
+                  input#quickPartyPhone.form-control(type="text" placeholder="Mobile number")
+                .form-group
+                  label Type
+                  select#quickPartyType.form-control
+                    option(value="RETAILER") Retailer
+                    option(value="WALKIN") Walk-in
+                    option(value="BOTH") Both
+                .form-group.mb-0
+                  label Address
+                  textarea#quickPartyAddress.form-control(rows="3" placeholder="Optional address")
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-dismiss="modal") Cancel
+              button#saveQuickPartyBtn.btn.btn-brand(type="button") Save Party
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script.
+      var BILL_PAGE_BOOTSTRAP = !{JSON.stringify(typeof pageData !== 'undefined' ? pageData : {})};
+    script(src="/assets/js/pages/footwears/billing.js")

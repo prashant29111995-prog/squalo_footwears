@@ -1,0 +1,294 @@
+doctype html
+html(dir='ltr', lang='en-US')
+  head
+    meta(http-equiv='content-type', content='text/html; charset=utf-8')
+    meta(name='author', content='Squalo Solutions (P) ltd.')
+    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700', rel='stylesheet', type='text/css')
+    link(rel='stylesheet', href='css/bootstrap.css', type='text/css')
+    link(rel='stylesheet', href='style.css', type='text/css')
+    link(rel='stylesheet', href='one-page/onepage.css', type='text/css')
+    link(rel='stylesheet', href='css/dark.css', type='text/css')
+    link(rel='stylesheet', href='css/font-icons.css', type='text/css')
+    link(rel='stylesheet', href='one-page/css/et-line.css', type='text/css')
+    link(rel='stylesheet', href='css/animate.css', type='text/css')
+    link(rel='stylesheet', href='css/magnific-popup.css', type='text/css')
+    link(rel='stylesheet', href='one-page/css/fonts.css', type='text/css')
+    link(rel='stylesheet', href='css/custom.css', type='text/css')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    title Privacy Policy | TheSqualo
+    style.
+  body.stretched.stretched.block-testimonials-3
+    #wrapper.clearfix
+      header#header.full-header.transparent-header.border-full-header.header-size-custom(data-sticky-shrink='false')
+        #header-wrap
+          .container
+            .header-row
+              #logo
+                a.standard-logo(href='/', data-dark-logo='one-page/images/canvasone-dark.png')
+                  img(src='one-page/images/logo-only.png', alt='Logo')
+                a.retina-logo(href='/', data-dark-logo='one-page/images/canvasone-dark@2x.png')
+                  img(src='one-page/images/logo-only.png', alt='Logo')
+              #primary-menu-trigger
+                svg.svg-trigger(viewBox='0 0 100 100')
+                  path(d='m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20')
+                  path(d='m 30,50 h 40')
+                  path(d='m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20')
+              nav.primary-menu
+                ul.one-page-menu.menu-container(data-easing='easeInOutExpo', data-speed='1250', data-offset='65')
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#wrapper')
+                      div Home
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#contentwork')
+                      div About
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#specialization')
+                      div Specialization
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#price')
+                      div Pricing
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#review')
+                      div Reviews
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#faqs')
+                      div F.A.Qs
+                  li.menu-item
+                    a.menu-link(href='#', data-href='#contact')
+                      div Contact
+                  li.menu-item
+                    a.button.button-large.button-rounded.m-0(href='#block-modal-contact', data-lightbox='inline', style='background-color:#084678') Start Trial
+              .modal-on-load(data-target='#block-modal-contact')
+              #block-modal-contact.modal1.mfp-hide
+                .modal-dialog.modal-dialog-centered.modal-lg
+                  .modal-content.bg-white.rounded
+                    .loader1(style='display:none;')
+                    .row.m-0
+                      .col-lg-6.d-flex.align-items-center.bg-light
+                        img(src='images/blocks/preview/popups/popup-contact.svg', alt='Image')
+                      #afterformsubmit.col-lg-6.p-5(style='display:none;')
+                        h3.mb-3 Thank you so much. We will be in touch with you shortly.
+                      #beforeformsubmit.col-lg-6.p-5
+                        h3.mb-3 Just Ping us we will connect with you.
+                        .form-widget
+                          .form-result
+                          form#block-contactform.mb-0(name='block-contactform', onsubmit='return validateForm()', method='post')
+                            .row
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-name')
+                                  | Name 
+                                  small *
+                                input#block-contactform-name.form-control.required(type='text', name='block-contactform-name', value='')
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-email')
+                                  | Email 
+                                  small *
+                                input#block-contactform-email.required.email.form-control(type='email', name='block-contactform-email', value='')
+                              .col-12.form-group
+                                label.nott.ls0.fw-medium.mb-1(for='block-contactform-email')
+                                  | Phone 
+                                  small *
+                                input#block-contactform-number.required.email.form-control(type='tel', name='block-contactform-email', value='')
+                              .col-md-12.form-group
+                                label.nott.ls0.fw-medium(for='template-contactform-subject') Subject
+                                select#template-contactform-subject.form-select.required.valid(name='template-contactform-subject')
+                                  option(disabled='', selected='', value='') -- Select One --
+                                  option(value='Design') AI Tools
+                                  option(value='Development') Hire Writers
+                                  option(value='Marketing') Academic Support
+                                  option(value='Support') Content Development
+                              .col-12.d-flex.justify-content-end
+                                button#block-contactform-submit.btn.w-100.btn-primary.py-2.mx-0(name='block-contactform-submit', onclick='sendMessage();') Send Message
+                            input(type='hidden', name='prefix', value='block-contactform-')
+        .header-wrap-clone
+      section#content
+        .content-wrap.py-0(style='overflow: visible')
+          #about.row.feature-box-border-horizontal.border-hover-animate.col-mb-50.justify-content-center.my-5
+            .heading-block.center(style='margin-top:150px;')
+              h2 Privacy policy
+              span
+                | By using our website, you hereby consent to our Privacy Policy and agree to its terms.
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                p
+                  | At Squalo solutions, accessible from thesqualo.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by thesqualo.com and how we use it.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Squalo Solutions. This policy is not applicable to any information collected offline or via channels other than this website.
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Information we collect
+                p
+                  | The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | If you contact us directly, we may receive additional information about you such as your name, email address, phone number, the contents of the message and/or attachments you may send us, and any other information you may choose to provide.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | When you register for an Account, we may ask for your contact information, including items such as phone number, email address.
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 How we use your information
+                p We use the information we collect in various ways, including to:
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Provide, operate, and maintain our website
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Improve, personalize, and expand our website
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Understand and analyze how you use our website
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Develop new products, services, features, and functionality
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | -Communicate with you, either directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the website, and for marketing and promotional purposes
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Send you emails
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p -Find and prevent fraud
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Log Files
+                p
+                  | thesqualo.com follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services&apos; analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users&apos; movement on the website, and gathering demographic information.
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Advertising Partners Privacy Policies
+                p
+                  | You may consult this list to find the Privacy Policy for each of the advertising partners of thesqualo.com.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on thesqualo.com, which are sent directly to users&apos; browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Note that thesqualo.com has no access to or control over these cookies that are used by third-party advertisers.
+            | &#x9;&#x9;&#x9;   
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 CCPA Privacy Rights (Do Not Sell My Personal Information)
+                p Under the CCPA, among other rights, California consumers have the right to:
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Request that a business that collects a consumer&apos;s personal data disclose the categories and specific pieces of personal data that a business has collected about consumers.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Request that a business delete any personal data about the consumer that a business has collected.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | Request that a business that sells a consumer&apos;s personal data, not sell the consumer&apos;s personal data.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
+            | &#x9;&#x9;&#x9;&#x9; 
+            | &#x9;&#x9;&#x9;   
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 GDPR Data Protection Rights
+                p
+                  | We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to access &ndash; You have the right to request copies of your personal data. We may charge you a small fee for this service.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to rectification &ndash; You have the right to request that we correct any information you believe is inaccurate. You also have the right to request that we complete the information you believe is incomplete.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to erasure &ndash; You have the right to request that we erase your personal data, under certain conditions.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to restrict processing &ndash; You have the right to request that we restrict the processing of your personal data, under certain conditions.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to object to processing &ndash; You have the right to object to our processing of your personal data, under certain conditions.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | The right to data portability &ndash; You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
+            | &#x9;&#x9;&#x9;&#x9;  
+            .col-md-12.feature-box.fbox-light.fbox-center.fbox-effect
+              .fbox-content(style='margin-left:200px; margin-right:200px; text-align:center;')
+                h3.nott.text-larger.mb-4 Children&apos;s Information
+                p
+                  | Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                p
+                  | thesqualo.com does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.
+      footer#footer.dark
+        //
+          Copyrights
+          =============================================
+        #copyrights
+          .container
+            .row.justify-content-between.col-mb-30
+              .col-12.col-lg-auto.text-center.text-lg-start.order-last.order-lg-first
+                img.mb-4(src='image.png', alt='Image')
+                br
+                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;Copyrights &copy; 2020 All Rights Reserved by Squalo solutions (P) ltd.
+              .col-12.col-lg-auto.text-center.text-lg-end
+                .copyrights-menu.copyright-links
+                  a(href='/terms') Terms &amp; Condition
+                  | /
+                  a(href='/privacy') Privacy Policy
+                  | /
+                  a(href='/refund') Refund &amp; cancellation
+            .row.justify-content-between.col-mb-30
+              .col-12.col-lg-auto.text-center.text-lg-start.order-last.order-lg-first
+              .col-12.col-lg-auto.text-center.text-lg-end
+                .copyrights-menu.copyright-links
+                  a(href='/login') Staff Login
+        // #copyrights end
+        // #footer end
+    #gotoTop.icon-angle-up
+    script(src='js/jquery.js')
+    script(src='js/custom.js')
+    script(src='js/plugins.min.js')
+    script(src='https://maps.google.com/maps/api/js?key=AIzaSyAO2BYvn4xyrdisvP8feA4AS_PGZFxJDp4')
+    script(src='js/functions.js')
+    script.
+      jQuery(document).ready( function($){
+      var $faqItems = $('#faqs .faq');
+      if( window.location.hash != '' ) {
+      var getFaqFilterHash = window.location.hash;
+      var hashFaqFilter = getFaqFilterHash.split('#');
+      if( $faqItems.hasClass( hashFaqFilter[1] ) ) {
+      $('.grid-filter li').removeClass('activeFilter');
+      $( '[data-filter=".'+ hashFaqFilter[1] +'"]' ).parent('li').addClass('activeFilter');
+      var hashFaqSelector = '.' + hashFaqFilter[1];
+      $faqItems.css('display', 'none');
+      if( hashFaqSelector != 'all' ) {
+      $( hashFaqSelector ).fadeIn(500);
+      } else {
+      $faqItems.fadeIn(500);
+      }
+      }
+      }
+      $('.grid-filter a').on( 'click', function(){
+      $('.grid-filter li').removeClass('activeFilter');
+      $(this).parent('li').addClass('activeFilter');
+      var faqSelector = $(this).attr('data-filter');
+      $faqItems.css('display', 'none');
+      if( faqSelector != 'all' ) {
+      $( faqSelector ).fadeIn(500);
+      } else {
+      $faqItems.fadeIn(500);
+      }
+      return false;
+      });
+      var swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 0,
+      freeMode: true,
+      grabCursor: true,
+      scrollbar: {
+      el: '.swiper-scrollbar',
+      },
+      });
+      });

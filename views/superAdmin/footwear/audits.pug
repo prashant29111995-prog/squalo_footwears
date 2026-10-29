@@ -1,0 +1,238 @@
+doctype html
+html(lang="en")
+  include ../partials/head.pug
+
+  body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
+    #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
+      .kt-header-mobile__logo
+        a(href="index.html")
+          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+
+    .kt-grid.kt-grid--hor.kt-grid--root
+      .kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--ver.kt-page
+        include ../partials/sidenav.pug
+
+        #kt_wrapper.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor.kt-wrapper
+          include ../partials/topnav.pug
+
+          #kt_content.kt-content.kt-grid__item.kt-grid__item--fluid.kt-grid.kt-grid--hor
+            include ../partials/header.pug
+
+            .kt-container.kt-container--fluid.kt-grid__item.kt-grid__item--fluid
+              .kt-portlet.kt-portlet--mobile
+                .kt-portlet__head
+                  .kt-portlet__head-label
+                    h3.kt-portlet__head-title Audits
+                  .kt-portlet__head-toolbar
+                    button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalAuditCreate")
+                      i.la.la-plus
+                      |  Create Audit
+
+                .kt-portlet__body(style="padding-top:0")
+                  .kt-form.kt-form--label-right.kt-margin-t-20.kt-margin-b-10
+                    .row.align-items-center
+                      .col-xl-6
+                        .kt-input-icon.kt-input-icon--left
+                          input#generalSearch.form-control(type="text", placeholder="Search audit / store / category / status")
+                          span.kt-input-icon__icon.kt-input-icon__icon--left
+                            i.la.la-search
+
+                  table#auditsTable.table.table-striped.table-bordered.table-hover
+                    thead
+                      tr
+                        th Date
+                        th Store
+                        th Category Group
+                        th Category
+                        th Type
+                        th Status
+                        th Actions
+                    tbody
+
+          include ../partials/footer.pug
+
+    // CREATE AUDIT MODAL
+    #modalAuditCreate.modal.fade(tabindex="-1")
+      .modal-dialog.modal-md
+        .modal-content
+          .modal-header
+            h5.modal-title Create Audit
+            button.close(data-dismiss="modal")
+          .modal-body
+            form#auditCreateForm
+              .form-group
+                label Store
+                select#audit_store.form-control(required)
+                  option(value="" disabled selected) Select Store
+
+              .form-group
+                label Category Group
+                select#audit_categoryGroup.form-control(required)
+                  option(value="" disabled selected) Select group
+                  option(value="MEN") MEN
+                  option(value="WOMEN") WOMEN
+                  option(value="KIDS") KIDS
+                  option(value="UNISEX") UNISEX
+
+              .form-group
+                label Category
+                select#audit_category.form-control(required disabled)
+                  option(value="" disabled selected) Select category
+
+              .form-group
+                label Audit Type
+                select#audit_type.form-control(required)
+                  option(value="OPENING") OPENING
+                  option(value="ROUTINE") ROUTINE
+
+              .form-group
+                label Audit Date
+                input#audit_date.form-control(type="date")
+
+              .form-group
+                label Notes (optional)
+                textarea#audit_notes.form-control(rows="2" placeholder="Any notes...")
+
+            .modal-footer
+              button.btn.btn-secondary(data-dismiss="modal") Cancel
+              button.btn.btn-brand(type="submit", form="auditCreateForm") Create
+
+    // AUDIT DETAIL MODAL (LINES + WORKFLOW)
+    // AUDIT DETAIL MODAL (LINES + WORKFLOW)
+#modalAuditDetail.modal.fade(tabindex="-1" role="dialog" aria-hidden="true")
+  .modal-dialog.modal-xl(role="document")
+    .modal-content
+      .modal-header
+        .d-flex.align-items-center.w-100
+          h5.modal-title.mb-0 Audit Detail
+          .ml-auto.d-flex.align-items-center
+            // status badge (filled by JS)
+            span#audit_status_badge.badge.badge-secondary.mr-3(style="font-size:0.9rem; padding:0.5rem 0.75rem;") DRAFT
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") ×
+
+      .modal-body
+        input#audit_id(type="hidden")
+
+        // ===== HEADER SUMMARY =====
+        .kt-section
+          .kt-section__content
+            .row
+              .col-md-4
+                .form-group
+                  label.mb-1 Store
+                  input#audit_store_view.form-control(readonly placeholder="Store")
+              .col-md-2
+                .form-group
+                  label.mb-1 Category Group
+                  input#audit_categoryGroup_view.form-control(readonly placeholder="MEN/WOMEN/KIDS/UNISEX")
+              .col-md-2
+                .form-group
+                  label.mb-1 Category
+                  input#audit_category_view.form-control(readonly placeholder="EVA SHOES / GENTS PU ...")
+              .col-md-2
+                .form-group
+                  label.mb-1 Type
+                  input#audit_type_view.form-control(readonly placeholder="OPENING/ROUTINE")
+              .col-md-2
+                .form-group
+                  label.mb-1 Status
+                  input#audit_status_view.form-control(readonly placeholder="DRAFT/SUBMITTED/APPROVED")
+              .col-md-2
+                .form-group
+                  label.mb-1 Date
+                  input#audit_date_view.form-control(readonly placeholder="Date/Time")
+
+        hr
+
+        // ===== FAST ENTRY (STICKY BAR) =====
+        // This bar stays visible while scrolling the table
+        .kt-portlet.kt-portlet--solid.kt-portlet--head-sm(style="position:sticky; top:0; z-index:5; box-shadow:0 6px 12px rgba(0,0,0,0.04);")
+          .kt-portlet__body(style="padding:1rem;")
+            .row.align-items-end
+              .col-md-6
+                .form-group(style="position:relative;")
+                  label SKU Code
+                  input#skuSearch.form-control(
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Search SKU (code / article / brand)..."
+                  )
+                  // dropdown
+                  #skuSuggest.dropdown-menu(style="width:100%; max-height:280px; overflow:auto; display:none;")
+                  
+              .col-md-3
+                .form-group.mb-0
+                  label Counted Qty
+                  input#countedQty.form-control(type="number", min="0", value="0")
+              .col-md-3
+                .form-group.mb-0
+                  button#btnAddLine.btn.btn-brand.btn-block(type="button")
+                    i.la.la-plus
+                    |  Add / Update Line
+            .row.mt-3
+              .col-md-8
+                input#auditExcelFile.form-control(type="file" accept=".xlsx,.xls")
+              .col-md-4
+                button#btnUploadAuditExcel.btn.btn-outline-brand.btn-block(type="button")
+                  i.la.la-upload
+                  | Upload Excel
+            // quick feedback (filled by JS)
+            //.row.mt-2
+            //  .col-12
+            //    small.text-muted
+            //      | Last action:
+            //      span#last_action_text.ml-2.font-weight-bold -
+
+        // ===== LINES TABLE =====
+        .kt-section.mt-3
+          .kt-section__content
+            .d-flex.align-items-center.mb-2
+              h6.mb-0 Counted Items
+              .ml-auto
+                small.text-muted
+                  | Rows:
+                  span#lines_count.ml-1 0
+
+            .kt-scroll(style="max-height:380px; overflow:auto; border:1px solid #eef1f5; border-radius:6px;")
+              table#auditLinesTable.table.table-striped.table-bordered.table-hover.mb-0
+                thead(style="position:sticky; top:0; background:#fff; z-index:2;")
+                  tr
+                    th SKU Code
+                    th Brand
+                    th Article
+                    th Color
+                    th Size
+                    th Counted Qty
+                    th Actions
+                tbody
+
+      .modal-footer
+        // Left-side helper text
+        small.text-muted.mr-auto
+          | Workflow: DRAFT → SUBMITTED → APPROVED → LOCKED
+
+        button#btnSubmitAudit.btn.btn-warning(type="button")
+          i.la.la-send
+          |  Submit
+
+        button#btnApproveAudit.btn.btn-success(type="button")
+          i.la.la-check
+          |  Approve
+
+        button#btnLockAudit.btn.btn-dark(type="button")
+          i.la.la-lock
+          |  Lock
+
+        button.btn.btn-secondary(type="button", data-dismiss="modal") Close
+
+
+    #kt_scrolltop.kt-scrolltop
+      i.fa.fa-arrow-up
+
+    script(src="/assets/plugins/global/plugins.bundle.js")
+    script(src="/assets/js/scripts.bundle.js")
+    script(src="/assets/plugins/custom/datatables/datatables.bundle.js")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    // ✅ ONE JS FILE ONLY for Audits page
+    script(src="/rpanel/js/footwear/su/audits-ui.js")

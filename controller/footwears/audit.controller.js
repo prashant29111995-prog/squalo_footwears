@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Audit = require("../../models/footwears/Audit");
 const AuditLine = require("../../models/footwears/AuditLine");
-const Store = require("../../models/footwears/store");
+const Store = require("../../models/footwears/Store");
 const StockLedger = require("../../models/footwears/StockLedger");
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);

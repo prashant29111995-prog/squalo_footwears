@@ -18,7 +18,7 @@ exports.validatePasswordChange = [
     .notEmpty()
     .custom(async (value, { req }) => {
       const existingUser = await User.findOne({
-        _id: req.decoded.userId,
+        _id: (req.user || req.decoded).userId,
       });
       var checkUser = await bcrypt.compare(value, existingUser.password);
       if (checkUser) {
@@ -85,6 +85,12 @@ exports.post_user_login = async function (req, res, next) {
       });
     }
     var result = await bcrypt.compare(req.body.password, userdata[0].password);
+    if (userdata[0].user_type === "PartyStaff") {
+      return res.status(403).json({
+        msg: "error",
+        message: "Please use the POS staff login",
+      });
+    }
     if (result) {
       // const user_roles = ["SuperAdmin","Admin", "Manager", "TeamLead", "Expert"]
       // const user_types = ["Freelancer", "Employee", "Client"]
@@ -171,36 +177,132 @@ exports.post_user_logout = function (req, res, next) {
 
 exports.put_change_user_password = async function (req, res, next) {
   try {
-    const { errors } = validationResult(req);
-    if (errors.length) {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
       return res.status(400).json({
-        error: errors[0].msg,
+        error: errors.array()[0].msg,
       });
     }
-    const { newPassword } = req.body;
-    var encryptedpass = await bcrypt.hash(newPassword, 10);
-    const updateUserPassord = await User.updateOne(
+
+    // checkAuth sets req.user; support older middleware using req.decoded.
+    const authenticatedUser = req.user || req.decoded;
+    const userId = authenticatedUser && authenticatedUser.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        error: "Please sign in again",
+      });
+    }
+
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (
+      typeof oldPassword !== "string" ||
+      typeof newPassword !== "string" ||
+      typeof confirmPassword !== "string"
+    ) {
+      return res.status(400).json({
+        error: "Current, new and confirm passwords are required",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        error: "New password and confirm password must match",
+      });
+    }
+
+    if (
+      newPassword.length < 8 ||
+      Buffer.byteLength(newPassword, "utf8") > 72 ||
+      !/[A-Za-z]/.test(newPassword) ||
+      !/\d/.test(newPassword) ||
+      !/[^A-Za-z0-9]/.test(newPassword)
+    ) {
+      return res.status(400).json({
+        error:
+          "Use at least 8 characters with a letter, number and special character. Maximum length is 72 UTF-8 bytes.",
+      });
+    }
+
+    const user = await User.findById(userId)
+      .select("_id is_active +password");
+
+    if (!user || !user.is_active || !user.password) {
+      return res.status(401).json({
+        error: "Your account is unavailable. Please sign in again.",
+      });
+    }
+
+    const passwordMatches = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+
+    if (!passwordMatches) {
+      return res.status(400).json({
+        error: "Current password is incorrect",
+      });
+    }
+
+    const passwordUnchanged = await bcrypt.compare(
+      newPassword,
+      user.password
+    );
+
+    if (passwordUnchanged) {
+      return res.status(400).json({
+        error: "New password must be different from your current password",
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    // Matching the old hash prevents overwriting a concurrent password change.
+    const result = await User.updateOne(
       {
-        _id: req.decoded.userId,
+        _id: user._id,
+        is_active: true,
+        password: user.password,
       },
       {
         $set: {
-          password: encryptedpass,
-          originalpass: newPassword,
+          password: passwordHash,
+          mustChangePassword: false,
+        },
+        $unset: {
+          originalpass: "",
+        },
+        $inc: {
+          authVersion: 1,
         },
       }
     );
-    if (updateUserPassord.nModified !== 1 || updateUserPassord.ok !== 1) {
-      return res.status(400).json({
-        error: 'There was an error modifying password for your account',
+
+    // Support both older and newer Mongoose update results.
+    const modifiedCount =
+      result.modifiedCount !== undefined
+        ? result.modifiedCount
+        : result.nModified;
+
+    if (modifiedCount !== 1) {
+      return res.status(409).json({
+        error:
+          "Your account changed during this request. Please sign in again and retry.",
       });
     }
-    res.json({
-      status: 'OK',
-      msg: 'Changed the user passord successfully',
+
+    return res.json({
+      status: "OK",
+      msg: "Password changed successfully",
     });
   } catch (error) {
-    res.send(error);
+    console.error("Failed to change password", error);
+
+    return res.status(500).json({
+      error: "Unable to change password. Please try again.",
+    });
   }
 };
 

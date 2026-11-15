@@ -1,102 +1,279 @@
-// /controllers/store.controller.js
 const mongoose = require("mongoose");
-const Store = require("../../models/footwears/store");
-mongoose.set("useFindAndModify", false);
-/**
- * Helpers
- */
-const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-const pick = (obj, keys) =>
-  keys.reduce((acc, k) => {
-    if (obj && Object.prototype.hasOwnProperty.call(obj, k) && obj[k] !== undefined) acc[k] = obj[k];
-    return acc;
-  }, {});
+const Store = require("../../models/footwears/Store");
+const Business = require("../../models/footwears/Business");
 
-const escapeRegex = (s = "") => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const STORE_TYPES = ["RETAIL", "GODOWN", "WAREHOUSE"];
 
-/**
- * POST /stores
- * Create a new store
- */
+const has = (object, key) =>
+  Object.prototype.hasOwnProperty.call(object, key);
+
+const isValidObjectId = (value) =>
+  typeof value === "string" &&
+  /^[a-f\d]{24}$/i.test(value) &&
+  mongoose.Types.ObjectId.isValid(value);
+
+function fail(status, message) {
+  const error = new Error(message);
+  error.status = status;
+  throw error;
+}
+
+function requireBody(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    fail(400, "A JSON object is required");
+  }
+}
+
+function readText(value, field, required = false) {
+  if (typeof value !== "string") {
+    fail(400, `${field} must be a string`);
+  }
+
+  const result = value.trim();
+
+  if (required && !result) {
+    fail(400, `${field} is required`);
+  }
+
+  return result;
+}
+
+function readBoolean(value, field) {
+  if (value === true || value === "true") return true;
+  if (value === false || value === "false") return false;
+
+  fail(400, `${field} must be true or false`);
+}
+
+function readPositiveInteger(value, fallback, field) {
+  if (value === undefined) return fallback;
+
+  const result = Number(value);
+
+  if (!Number.isSafeInteger(result) || result < 1) {
+    fail(400, `${field} must be a positive integer`);
+  }
+
+  return result;
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function handleError(res, error, message) {
+  if (error.status) {
+    return res.status(error.status).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+
+  if (error.name === "ValidationError") {
+    return res.status(400).json({
+      ok: false,
+      message: "Store validation failed",
+      errors: Object.values(error.errors).map((item) => item.message),
+    });
+  }
+
+  if (error.code === 11000) {
+    return res.status(409).json({
+      ok: false,
+      message: "Store code already exists",
+    });
+  }
+
+  console.error(message, error);
+
+  return res.status(500).json({
+    ok: false,
+    message,
+  });
+}
+
+function applyStoreFields(store, body) {
+  if (has(body, "code")) {
+    store.code = readText(body.code, "code", true).toUpperCase();
+  }
+
+  if (has(body, "name")) {
+    store.name = readText(body.name, "name", true);
+  }
+
+  if (has(body, "type")) {
+    const type = readText(body.type, "type", true).toUpperCase();
+
+    if (!STORE_TYPES.includes(type)) {
+      fail(400, "type must be RETAIL, GODOWN, or WAREHOUSE");
+    }
+
+    store.type = type;
+  }
+
+  if (has(body, "isActive")) {
+    store.isActive = readBoolean(body.isActive, "isActive");
+  }
+
+  if (has(body, "address")) {
+    if (
+      !body.address ||
+      typeof body.address !== "object" ||
+      Array.isArray(body.address)
+    ) {
+      fail(400, "address must be an object");
+    }
+
+    // Merge supplied address fields rather than erase omitted fields.
+    for (const field of ["line1", "city", "state", "pincode"]) {
+      if (has(body.address, field)) {
+        store.set(
+          `address.${field}`,
+          readText(body.address[field], `address.${field}`)
+        );
+      }
+    }
+  }
+}
+
+async function requireActiveBusiness(businessId) {
+  if (!isValidObjectId(businessId)) {
+    fail(400, "A valid businessId is required");
+  }
+
+  const business = await Business.findById(businessId)
+    .select("_id isActive")
+    .lean();
+
+  if (!business) {
+    fail(404, "Business workspace not found");
+  }
+
+  if (!business.isActive) {
+    fail(409, "Business workspace is inactive");
+  }
+
+  return business;
+}
+
+// POST /stores
 exports.create = async (req, res) => {
   try {
-    const payload = pick(req.body, ["code", "name", "type", "address", "isActive"]);
+    requireBody(req.body);
 
-    if (!payload.code || !payload.name) {
-      return res.status(400).json({ ok: false, message: "code and name are required" });
+    await requireActiveBusiness(req.body.businessId);
+
+    const store = new Store({
+      businessId: req.body.businessId,
+    });
+
+    applyStoreFields(store, req.body);
+
+    if (!store.code || !store.name) {
+      fail(400, "code and name are required");
     }
 
-    // Normalize
-    payload.code = String(payload.code).trim().toUpperCase();
-    payload.name = String(payload.name).trim();
+    await store.save();
 
-    if (payload.type) payload.type = String(payload.type).trim().toUpperCase();
-
-    // Ensure unique code
-    const exists = await Store.findOne({ code: payload.code }).lean();
-    if (exists) {
-      return res.status(409).json({ ok: false, message: "Store code already exists" });
-    }
-
-    const store = await Store.create(payload);
-
-    return res.status(201).json({ ok: true, data: store });
-  } catch (err) {
-    // Mongoose duplicate key safeguard
-    if (err?.code === 11000) {
-      return res.status(409).json({ ok: false, message: "Duplicate store code" });
-    }
-    return res.status(500).json({ ok: false, message: "Failed to create store", error: err.message });
+    return res.status(201).json({
+      ok: true,
+      data: store,
+    });
+  } catch (error) {
+    return handleError(res, error, "Failed to create store");
   }
 };
 
-/**
- * GET /stores
- * List stores with filters + pagination
- * Query:
- *  - q (search on code/name)
- *  - type (RETAIL/GODOWN/WAREHOUSE)
- *  - isActive (true/false)
- *  - page, limit
- *  - sort (e.g. "createdAt" or "-createdAt")
- */
+// GET /stores
 exports.list = async (req, res) => {
   try {
-    const {
-      q,
-      type,
-      isActive,
-      page = 1,
-      limit = 25,
-      sort = "-createdAt",
-    } = req.query;
+    const filter = {};
 
-    // ✅ Default: only active stores
-    const filter = {
-      isActive: true,
+    if (req.query.isActive === "all") {
+      // Central administrator can request all account statuses.
+    } else {
+      filter.isActive =
+        req.query.isActive === undefined
+          ? true
+          : readBoolean(req.query.isActive, "isActive");
+    }
+
+    if (req.query.businessId !== undefined) {
+      if (!isValidObjectId(req.query.businessId)) {
+        fail(400, "Invalid businessId");
+      }
+
+      filter.businessId = req.query.businessId;
+    }
+
+    if (req.query.type !== undefined) {
+      const type = readText(req.query.type, "type", true).toUpperCase();
+
+      if (!STORE_TYPES.includes(type)) {
+        fail(400, "type must be RETAIL, GODOWN, or WAREHOUSE");
+      }
+
+      filter.type = type;
+    }
+
+    if (req.query.q !== undefined) {
+      const query = readText(req.query.q, "q");
+
+      if (query.length > 100) {
+        fail(400, "Search text must be 100 characters or fewer");
+      }
+
+      if (query) {
+        const rx = new RegExp(escapeRegex(query), "i");
+        filter.$or = [{ code: rx }, { name: rx }];
+      }
+    }
+
+    const page = readPositiveInteger(req.query.page, 1, "page");
+    const limit = Math.min(
+      readPositiveInteger(req.query.limit, 25, "limit"),
+      200
+    );
+
+    const skip = (page - 1) * limit;
+
+    if (!Number.isSafeInteger(skip)) {
+      fail(400, "page is too large");
+    }
+
+    const requestedSort = req.query.sort || "-createdAt";
+    const allowedSorts = [
+      "createdAt",
+      "-createdAt",
+      "updatedAt",
+      "-updatedAt",
+      "name",
+      "-name",
+      "code",
+      "-code",
+    ];
+
+    if (!allowedSorts.includes(requestedSort)) {
+      fail(400, "Invalid sort field");
+    }
+
+    const descending = requestedSort.startsWith("-");
+    const sortField = descending
+      ? requestedSort.slice(1)
+      : requestedSort;
+
+    const sort = {
+      [sortField]: descending ? -1 : 1,
+      _id: 1,
     };
 
-    // Allow explicit override
-    if (typeof isActive !== "undefined") {
-      filter.isActive = String(isActive).toLowerCase() === "true";
-    }
-
-    if (type) {
-      filter.type = String(type).trim().toUpperCase();
-    }
-
-    if (q && String(q).trim().length) {
-      const rx = new RegExp(escapeRegex(String(q).trim()), "i");
-      filter.$or = [{ code: rx }, { name: rx }];
-    }
-
-    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
-    const limitNum = Math.min(Math.max(parseInt(limit, 10) || 25, 1), 200);
-    const skip = (pageNum - 1) * limitNum;
-
     const [items, total] = await Promise.all([
-      Store.find(filter).sort(sort).skip(skip).limit(limitNum).lean(),
+      Store.find(filter)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
       Store.countDocuments(filter),
     ]);
 
@@ -104,111 +281,142 @@ exports.list = async (req, res) => {
       ok: true,
       data: items,
       meta: {
-        page: pageNum,
-        limit: limitNum,
+        page,
+        limit,
         total,
-        pages: Math.ceil(total / limitNum),
+        pages: Math.ceil(total / limit),
       },
     });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to list stores",
-      error: err.message,
-    });
+  } catch (error) {
+    return handleError(res, error, "Failed to list stores");
   }
 };
 
-/**
- * GET /stores/:id
- * Get a store by id
- */
+// GET /stores/:id
 exports.getById = async (req, res) => {
   try {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-      return res.status(400).json({ ok: false, message: "Invalid store id" });
+      fail(400, "Invalid store id");
     }
 
     const store = await Store.findById(id).lean();
+
     if (!store) {
-      return res.status(404).json({ ok: false, message: "Store not found" });
+      fail(404, "Store not found");
     }
 
-    return res.json({ ok: true, data: store });
-  } catch (err) {
-    return res.status(500).json({ ok: false, message: "Failed to get store", error: err.message });
+    return res.json({
+      ok: true,
+      data: store,
+    });
+  } catch (error) {
+    return handleError(res, error, "Failed to get store");
   }
 };
 
-/**
- * PATCH /stores/:id
- * Update store fields
- * Allowed:
- *  - code, name, type, address, isActive
- */
+// PATCH /stores/:id
 exports.update = async (req, res) => {
+  let session;
+
   try {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-      return res.status(400).json({ ok: false, message: "Invalid store id" });
+      fail(400, "Invalid store id");
     }
 
-    const updates = pick(req.body, ["code", "name", "type", "address", "isActive"]);
+    requireBody(req.body);
 
-    if (updates.code !== undefined) updates.code = String(updates.code).trim().toUpperCase();
-    if (updates.name !== undefined) updates.name = String(updates.name).trim();
-    if (updates.type !== undefined) updates.type = String(updates.type).trim().toUpperCase();
+    session = await mongoose.startSession();
 
-    // If updating code, ensure unique
-    if (updates.code) {
-      const dup = await Store.findOne({ code: updates.code, _id: { $ne: id } }).lean();
-      if (dup) {
-        return res.status(409).json({ ok: false, message: "Store code already exists" });
+    let result;
+
+    await session.withTransaction(async () => {
+      const store = await Store.findById(id).session(session);
+
+      if (!store) {
+        fail(404, "Store not found");
       }
-    }
 
-    const store = await Store.findByIdAndUpdate(id, updates, {
-      new: true,
-      runValidators: true,
+      if (has(req.body, "businessId")) {
+        const requestedBusinessId = req.body.businessId;
+
+        if (!isValidObjectId(requestedBusinessId)) {
+          fail(400, "Invalid businessId");
+        }
+
+        const existingBusinessId = store.businessId
+          ? String(store.businessId)
+          : "";
+
+        const normalizedRequestedId = String(
+          new mongoose.Types.ObjectId(requestedBusinessId)
+        );
+
+        if (
+          existingBusinessId &&
+          existingBusinessId !== normalizedRequestedId
+        ) {
+          fail(
+            409,
+            "This store already belongs to a business. Ownership changes require a separate migration."
+          );
+        }
+
+        const business = await Business.findById(requestedBusinessId)
+          .select("_id isActive")
+          .session(session)
+          .lean();
+
+        if (!business) {
+          fail(404, "Business workspace not found");
+        }
+
+        if (!business.isActive) {
+          fail(409, "Business workspace is inactive");
+        }
+
+        store.businessId = requestedBusinessId;
+      }
+
+      applyStoreFields(store, req.body);
+
+      await store.save({ session });
+
+      result = store.toObject();
     });
 
-    if (!store) {
-      return res.status(404).json({ ok: false, message: "Store not found" });
+    return res.json({
+      ok: true,
+      data: result,
+    });
+  } catch (error) {
+    return handleError(res, error, "Failed to update store");
+  } finally {
+    if (session) {
+      await session.endSession();
     }
-
-    return res.json({ ok: true, data: store });
-  } catch (err) {
-    if (err?.code === 11000) {
-      return res.status(409).json({ ok: false, message: "Duplicate store code" });
-    }
-    return res.status(500).json({ ok: false, message: "Failed to update store", error: err.message });
   }
 };
 
-/**
- * DELETE /stores/:id
- * Soft delete recommended: sets isActive=false
- * If you want hard delete, replace with Store.findByIdAndDelete
- */
+// DELETE /stores/:id
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
-console.log("hello")
+
     if (!isValidObjectId(id)) {
-      return res.status(400).json({ ok: false, message: "Invalid store id" });
+      fail(400, "Invalid store id");
     }
 
     const store = await Store.findById(id);
+
     if (!store) {
-      return res.status(404).json({ ok: false, message: "Store not found" });
+      fail(404, "Store not found");
     }
 
-    // ✅ Soft delete (BEST PRACTICE)
     store.isActive = false;
-
     await store.save();
 
     return res.json({
@@ -216,12 +424,7 @@ console.log("hello")
       message: "Store deactivated",
       data: store,
     });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to delete store",
-      error: err.message,
-    });
+  } catch (error) {
+    return handleError(res, error, "Failed to deactivate store");
   }
 };
-

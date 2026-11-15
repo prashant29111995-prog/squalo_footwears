@@ -1,127 +1,378 @@
 doctype html
 html(lang="en")
+  mixin partyFields(prefix, editing)
+    if editing
+      input(type="hidden", id=prefix + "id")
+
+    .row
+      .col-md-8
+        .form-group
+          label(for=prefix + "name") Party Name *
+          input.form-control(
+            id=prefix + "name"
+            name="name"
+            type="text"
+            required
+            maxlength="150"
+            placeholder="Business or shop name"
+          )
+
+      .col-md-4
+        .form-group
+          label(for=prefix + "partyType") Party Type *
+          select.form-control(
+            id=prefix + "partyType"
+            name="partyType"
+            required
+          )
+            option(value="CUSTOMER") Customer
+            option(value="SUPPLIER") Supplier
+            option(value="BOTH") Customer & Supplier
+
+    .row
+      .col-md-6
+        .form-group
+          label(for=prefix + "phone") Phone
+          input.form-control(
+            id=prefix + "phone"
+            name="phone"
+            type="tel"
+            maxlength="25"
+            placeholder="Contact number"
+          )
+
+      .col-md-6
+        .form-group
+          label(for=prefix + "whatsapp") WhatsApp
+          input.form-control(
+            id=prefix + "whatsapp"
+            name="whatsapp"
+            type="tel"
+            maxlength="25"
+            placeholder="WhatsApp number"
+          )
+
+    .form-group
+      label(for=prefix + "address") Address
+      textarea.form-control(
+        id=prefix + "address"
+        name="address"
+        rows="2"
+        maxlength="500"
+        placeholder="Shop, building and street"
+      )
+
+    .row
+      .col-md-6
+        .form-group
+          label(for=prefix + "city") City
+          input.form-control(
+            id=prefix + "city"
+            name="city"
+            type="text"
+            maxlength="100"
+          )
+
+      .col-md-6
+        .form-group
+          label(for=prefix + "area") Area / Market
+          input.form-control(
+            id=prefix + "area"
+            name="area"
+            type="text"
+            maxlength="150"
+          )
+
+    .form-group
+      label(for=prefix + "gstin") GSTIN
+      input.form-control(
+        id=prefix + "gstin"
+        name="gstin"
+        type="text"
+        maxlength="15"
+        placeholder="Optional"
+      )
+
+    .party-workspace-box
+      h6.mb-3 Outlet & POS Settings
+
+      .row
+        .col-md-6
+          .form-group
+            label(for=prefix + "ownershipType") Ownership
+            select.form-control(
+              id=prefix + "ownershipType"
+              name="ownershipType"
+            )
+              option(value="INDEPENDENT_BUYER") Independent Buyer
+              option(value="OWNED_OUTLET") Our Owned Outlet
+
+        .col-md-6
+          .form-group
+            label(for=prefix + "active") Account Status
+            select.form-control(
+              id=prefix + "active"
+              name="isActive"
+            )
+              option(value="true") Active
+              option(value="false") Inactive
+
+      .custom-control.custom-switch
+        input.custom-control-input(
+          id=prefix + "posEnabled"
+          name="posEnabled"
+          type="checkbox"
+        )
+        label.custom-control-label(for=prefix + "posEnabled") Enable POS
+
+      small.d-block.mt-2.text-muted(
+        id=prefix + "posHelp"
+        aria-live="polite"
+      ) Login requires workspace and staff account setup.
+
+    .form-group.mt-3
+      label(for=prefix + "notes") Notes
+      textarea.form-control(
+        id=prefix + "notes"
+        name="notes"
+        rows="2"
+        maxlength="1000"
+        placeholder="Optional internal notes"
+      )
+
+    .alert.alert-danger.d-none(
+      id=prefix + "error"
+      role="alert"
+      aria-live="assertive"
+    )
+
   include ../partials/head.pug
 
   style.
-    .party-page-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      margin-bottom:18px;
+    .party-page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
     }
-    .party-title h3{
-      margin:0;
-      font-weight:800;
-      color:#2c2e3e;
+
+    .party-title h3 {
+      margin: 0;
+      font-weight: 800;
+      color: #2c2e3e;
     }
-    .party-title small{
-      color:#8a90a5;
-      font-size:13px;
+
+    .party-title small {
+      color: #8a90a5;
+      font-size: 13px;
     }
-    .party-stat-card{
-      background:#fff;
-      border:1px solid #edf0f7;
-      border-radius:14px;
-      padding:18px;
-      min-height:105px;
-      box-shadow:0 8px 24px rgba(31,45,61,.04);
-      position:relative;
-      overflow:hidden;
+
+    .party-stat-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 105px;
+      margin-bottom: 12px;
+      padding: 18px;
+      border: 1px solid #edf0f7;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(31, 45, 61, 0.04);
     }
-    .party-stat-card:after{
-      content:"";
-      position:absolute;
-      right:-20px;
-      top:-20px;
-      width:70px;
-      height:70px;
-      border-radius:50%;
-      background:rgba(93,120,255,.08);
+
+    .party-stat-card::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(93, 120, 255, 0.08);
     }
-    .party-stat-label{
-      font-size:12px;
-      color:#74788d;
-      text-transform:uppercase;
-      letter-spacing:.45px;
-      font-weight:700;
-      margin-bottom:12px;
+
+    .party-stat-label {
+      margin-bottom: 12px;
+      color: #74788d;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.45px;
+      text-transform: uppercase;
     }
-    .party-stat-value{
-      font-size:30px;
-      font-weight:900;
-      color:#2c2e3e;
-      line-height:1;
+
+    .party-stat-value {
+      color: #2c2e3e;
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1;
     }
-    .party-stat-brand .party-stat-value{ color:#5d78ff; }
-    .party-stat-success .party-stat-value{ color:#10b981; }
-    .party-stat-info .party-stat-value{ color:#3b82f6; }
-    .party-stat-danger .party-stat-value{ color:#ef3e7b; }
-    .party-filter-box{
-      border:1px solid #edf0f7;
-      background:#fbfcff;
-      border-radius:14px;
-      padding:16px;
-      margin-bottom:18px;
+
+    .party-stat-brand .party-stat-value {
+      color: #5d78ff;
     }
-    .party-table-wrap{
-      border:1px solid #edf0f7;
-      border-radius:14px;
-      overflow:hidden;
-      background:#fff;
+
+    .party-stat-success .party-stat-value {
+      color: #10b981;
     }
-    #partiesTable{
-      margin-bottom:0 !important;
+
+    .party-stat-info .party-stat-value {
+      color: #3b82f6;
     }
-    #partiesTable th{
-      background:#f8f9fb;
-      font-weight:800;
-      color:#344054;
-      border-bottom:1px solid #edf0f7 !important;
-      white-space:nowrap;
+
+    .party-stat-danger .party-stat-value {
+      color: #ef3e7b;
     }
-    #partiesTable td{
-      vertical-align:middle !important;
-      white-space:nowrap;
+
+    .party-filter-box {
+      margin-bottom: 18px;
+      padding: 16px;
+      border: 1px solid #edf0f7;
+      border-radius: 14px;
+      background: #fbfcff;
     }
-    #partiesTable td:first-child{
-      white-space:normal;
-      min-width:230px;
+
+    .party-filter-box label {
+      font-weight: 600;
     }
-    .party-name-main{
-      font-weight:800;
-      color:#2c2e3e;
-      font-size:14px;
+
+    .party-table-wrap {
+      overflow: hidden;
+      border: 1px solid #edf0f7;
+      border-radius: 14px;
+      background: #fff;
     }
-    .party-name-sub{
-      color:#8a90a5;
-      font-size:11px;
-      margin-top:3px;
+
+    .party-table-wrap .dataTables_wrapper {
+      padding: 12px;
     }
-    .party-actions{
-      display:flex;
-      gap:6px;
-      align-items:center;
+
+    #partiesTable {
+      width: 100% !important;
+      margin-bottom: 0 !important;
     }
-    .party-actions .btn-icon{
-      width:36px;
-      height:36px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0;
+
+    #partiesTable th {
+      border-bottom: 1px solid #edf0f7 !important;
+      background: #f8f9fb;
+      color: #344054;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    #partiesTable td {
+      vertical-align: middle !important;
+      white-space: nowrap;
+    }
+
+    #partiesTable td:first-child {
+      min-width: 230px;
+      white-space: normal;
+    }
+
+    .party-name-main {
+      color: #2c2e3e;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .party-name-sub {
+      margin-top: 3px;
+      color: #8a90a5;
+      font-size: 11px;
+      white-space: normal;
+    }
+
+    .party-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .party-actions .btn {
+      white-space: nowrap;
+    }
+
+    .party-actions .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+    }
+
+    .party-workspace-box {
+      padding: 18px;
+      border: 1px solid #e1e7ff;
+      border-radius: 12px;
+      background: #f8faff;
+    }
+
+    .party-workspace-box h6 {
+      color: #344054;
+      font-weight: 800;
+    }
+
+    .party-pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .party-pill-blue {
+      background: #edf2ff;
+      color: #3455c5;
+    }
+
+    .party-pill-green {
+      background: #e8f7ef;
+      color: #18794e;
+    }
+
+    .party-pill-gray {
+      background: #f0f2f5;
+      color: #596579;
+    }
+
+    .party-pill-amber {
+      background: #fff3dc;
+      color: #925900;
+    }
+
+    .party-pill-red {
+      background: #fcebed;
+      color: #b42318;
+    }
+
+    @media (max-width: 767px) {
+      .party-page-head {
+        align-items: center;
+      }
+
+      .party-stat-value {
+        font-size: 25px;
+      }
     }
 
   body.kt-quick-panel--right.kt-demo-panel--right.kt-offcanvas-panel--right.kt-header--fixed.kt-header-mobile--fixed.kt-subheader--enabled.kt-subheader--fixed.kt-subheader--solid.kt-aside--enabled.kt-aside--fixed.kt-page--loading
     #kt_header_mobile.kt-header-mobile.kt-header-mobile--fixed
       .kt-header-mobile__logo
         a(href="index.html")
-          img(alt="Logo" src="/assets/media/logos/logo-dark.png")
+          img(
+            alt="Logo"
+            src="/assets/media/logos/logo-dark.png"
+          )
+
       .kt-header-mobile__toolbar
         button#kt_aside_mobile_toggler.kt-header-mobile__toggler.kt-header-mobile__toggler--left
           span
+
         button#kt_header_mobile_toggler.kt-header-mobile__toggler
           span
+
         button#kt_header_mobile_topbar_toggler.kt-header-mobile__topbar-toggler
           i.flaticon-more
 
@@ -140,165 +391,249 @@ html(lang="en")
                 .party-title
                   h3 Parties
                   small Customer, supplier and account management
-                button.btn.btn-brand.btn-sm(type="button", data-toggle="modal", data-target="#modalPartyCreate")
+
+                button.btn.btn-brand.btn-sm(
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#modalPartyCreate"
+                )
                   i.la.la-plus
                   |  Add Party
 
-              .row.mb-4
-                .col-md-3
+              .row.mb-3
+                .col-6.col-lg-3
                   .party-stat-card.party-stat-brand
-                    .party-stat-label Total Parties
-                    .party-stat-value#stat_total_parties 0
+                    .party-stat-label Listed Parties
+                    .party-stat-value#stat_total_parties —
 
-                .col-md-3
+                .col-6.col-lg-3
                   .party-stat-card.party-stat-success
-                    .party-stat-label Customers
-                    .party-stat-value#stat_total_customers 0
+                    .party-stat-label Customers / Both
+                    .party-stat-value#stat_total_customers —
 
-                .col-md-3
+                .col-6.col-lg-3
                   .party-stat-card.party-stat-info
-                    .party-stat-label Suppliers
-                    .party-stat-value#stat_total_suppliers 0
+                    .party-stat-label Owned Outlets
+                    .party-stat-value#stat_owned_outlets —
 
-                .col-md-3
-                  .party-stat-card.party-stat-danger
-                    .party-stat-label Inactive
-                    .party-stat-value#stat_inactive 0
+                .col-6.col-lg-3
+                  .party-stat-card.party-stat-success
+                    .party-stat-label POS Enabled
+                    .party-stat-value#stat_pos_enabled —
 
               .kt-portlet.kt-portlet--mobile
                 .kt-portlet__body
                   .party-filter-box
-                    .row.align-items-end
-                      .col-md-4.col-sm-12
-                        label Search
-                        .kt-input-icon.kt-input-icon--left
-                          input#generalSearch.form-control(type="text", placeholder="Search party, phone, GSTIN...")
-                          span.kt-input-icon__icon.kt-input-icon__icon--left
-                            span
-                              i.la.la-search
+                    .row
+                      .col-lg-4.col-md-6.mb-3
+                        label(for="generalSearch") Search
+                        input#generalSearch.form-control(
+                          type="search"
+                          placeholder="Name, phone, GSTIN or location"
+                          maxlength="100"
+                        )
 
-                      .col-md-3.col-sm-6.mt-2.mt-md-0
-                        label Type
+                      .col-lg-2.col-md-6.mb-3
+                        label(for="partyTypeFilter") Party Type
                         select#partyTypeFilter.form-control
                           option(value="") All Types
-                          option(value="SUPPLIER") Supplier
                           option(value="CUSTOMER") Customer
+                          option(value="SUPPLIER") Supplier
                           option(value="BOTH") Both
 
-                      .col-md-3.col-sm-6.mt-2.mt-md-0
-                        label Status
+                      .col-lg-2.col-md-6.mb-3
+                        label(for="ownershipFilter") Ownership
+                        select#ownershipFilter.form-control
+                          option(value="") All Ownership
+                          option(value="INDEPENDENT_BUYER") Independent Buyer
+                          option(value="OWNED_OUTLET") Owned Outlet
+
+                      .col-lg-2.col-md-6.mb-3
+                        label(for="posFilter") POS Setting
+                        select#posFilter.form-control
+                          option(value="") All
+                          option(value="true") Enabled
+                          option(value="false") Disabled
+
+                      .col-lg-2.col-md-6.mb-3
+                        label(for="activeFilter") Status
                         select#activeFilter.form-control
-                          option(value="true") Active Only
-                          option(value="false") Inactive Only
+                          option(value="true") Active
+                          option(value="false") Inactive
                           option(value="all") All Status
 
-                      .col-md-2.col-sm-12.mt-2.mt-md-0
-                        button#resetFilters.btn.btn-outline-secondary.btn-block(type="button")
-                          i.la.la-undo
-                          |  Reset
+                    .d-flex.justify-content-between.align-items-center.flex-wrap
+                      small.text-muted Counts reflect the current search and filters.
+
+                      button#resetFilters.btn.btn-outline-secondary.btn-sm(
+                        type="button"
+                      ) Reset Filters
+
+                  #partyLoadStatus.alert.alert-info(
+                    role="status"
+                    aria-live="polite"
+                  ) Loading parties...
+
+                  button#retryParties.btn.btn-outline-brand.btn-sm.mb-3.d-none(
+                    type="button"
+                  ) Retry Loading
 
                   .party-table-wrap
-                    table#partiesTable.table.table-hover.table-bordered.table-checkable
+                    table#partiesTable.table.table-hover.table-bordered
                       thead
                         tr
                           th Party
                           th Type
-                          th Phone
-                          th Address
+                          th Ownership
+                          th Contact
+                          th Location
+                          th POS Setting
                           th Status
-                          th Quick Actions
+                          th Actions
                       tbody
 
           include ../partials/footer.pug
 
-    // CREATE PARTY MODAL
-    #modalPartyCreate.modal.fade(role="dialog" tabindex="-1")
-      .modal-dialog.modal-md(role="document")
+    //- Create party modal
+    #modalPartyCreate.modal.fade(
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="createPartyTitle"
+    )
+      .modal-dialog.modal-lg(role="document")
         .modal-content
           .modal-header
-            h5.modal-title Add Party
-            button.close(type="button", data-dismiss="modal" aria-label="Close")
+            h5#createPartyTitle.modal-title Add Party
+
+            button.close(
+              type="button"
+              data-dismiss="modal"
+              aria-label="Close"
+            )
               span(aria-hidden="true") ×
+
           .modal-body
             form#partyCreateForm
-              .form-group
-                label Name
-                input#party_name.form-control(type="text" required placeholder="Party name")
-
-              .form-group
-                label Party Type
-                select#party_partyType.form-control(required)
-                  option(value="SUPPLIER") Supplier
-                  option(value="CUSTOMER" selected) Customer
-                  option(value="BOTH") Both
-
-              .form-group
-                label Phone
-                input#party_phone.form-control(type="text" placeholder="Mobile number")
-
-              .form-group
-                label Address
-                input#party_address.form-control(type="text" placeholder="Area / shop / market")
-
-              .form-group
-                label GSTIN
-                input#party_gstin.form-control(type="text" placeholder="Optional")
+              +partyFields("party_", false)
 
           .modal-footer
-            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
-            button.btn.btn-brand(type="submit", form="partyCreateForm") Save
+            button.btn.btn-secondary(
+              type="button"
+              data-dismiss="modal"
+            ) Cancel
 
-    // UPDATE PARTY MODAL
-    #modalPartyEdit.modal.fade(role="dialog" tabindex="-1")
-      .modal-dialog.modal-md(role="document")
+            button.btn.btn-brand(
+              type="submit"
+              form="partyCreateForm"
+            ) Save Party
+
+    //- Edit party modal
+    #modalPartyEdit.modal.fade(
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="editPartyTitle"
+    )
+      .modal-dialog.modal-lg(role="document")
         .modal-content
           .modal-header
-            h5.modal-title Update Party
-            button.close(type="button", data-dismiss="modal" aria-label="Close")
+            h5#editPartyTitle.modal-title Edit Party
+
+            button.close(
+              type="button"
+              data-dismiss="modal"
+              aria-label="Close"
+            )
               span(aria-hidden="true") ×
+
           .modal-body
             form#partyEditForm
-              input#edit_party_id(type="hidden")
-
-              .form-group
-                label Name
-                input#edit_party_name.form-control(type="text" required)
-
-              .form-group
-                label Party Type
-                select#edit_party_partyType.form-control(required)
-                  option(value="SUPPLIER") Supplier
-                  option(value="CUSTOMER") Customer
-                  option(value="BOTH") Both
-
-              .form-group
-                label Phone
-                input#edit_party_phone.form-control(type="text")
-
-              .form-group
-                label Address
-                input#edit_party_address.form-control(type="text")
-
-              .form-group
-                label GSTIN
-                input#edit_party_gstin.form-control(type="text")
-
-              .form-group
-                label Active
-                select#edit_party_active.form-control
-                  option(value="true") Yes
-                  option(value="false") No
+              +partyFields("edit_party_", true)
 
           .modal-footer
-            button.btn.btn-secondary(type="button", data-dismiss="modal") Cancel
-            button.btn.btn-brand(type="submit", form="partyEditForm") Update
+            button.btn.btn-secondary(
+              type="button"
+              data-dismiss="modal"
+            ) Cancel
 
+            button.btn.btn-brand(
+              type="submit"
+              form="partyEditForm"
+            ) Save Changes
+    #modalPartyWorkspace.modal.fade(
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="workspaceTitle"
+    )
+      .modal-dialog.modal-lg(role="document")
+        .modal-content
+          .modal-header
+            h5#workspaceTitle.modal-title Party Workspace
+
+            button.close(
+              type="button"
+              data-dismiss="modal"
+              aria-label="Close"
+            )
+              span(aria-hidden="true") ×
+
+          .modal-body
+            p.text-muted.mb-3
+              | Create a workspace for this party's stores, staff and POS.
+
+            dl.row.mb-3
+              dt.col-sm-4 Party
+              dd#workspacePartyName.col-sm-8 —
+
+              dt.col-sm-4 Ownership
+              dd#workspaceOwnership.col-sm-8 —
+
+              dt.col-sm-4 Workspace Status
+              dd#workspaceStatus.col-sm-8 —
+
+              dt.col-sm-4 Workspace Code
+              dd#workspaceCode.col-sm-8 —
+
+            #workspaceMessage.alert.alert-info(
+              role="status"
+              aria-live="polite"
+            ) Loading workspace...
+
+            small.text-muted
+              | Creating a workspace does not create staff logins or move stock.
+              |  Existing stores will be linked in the next step.
+
+          .modal-footer
+            button.btn.btn-secondary(
+              type="button"
+              data-dismiss="modal"
+            ) Close
+
+            button#retryWorkspace.btn.btn-outline-brand.d-none(
+              type="button"
+            ) Retry
+
+            button#createPartyWorkspace.btn.btn-brand(
+              type="button"
+              disabled
+            ) Create Workspace
+    
     #kt_scrolltop.kt-scrolltop
       i.fa.fa-arrow-up
 
-    script(src="/assets/plugins/global/plugins.bundle.js" type="text/javascript")
-    script(src="/assets/js/scripts.bundle.js" type="text/javascript")
-    script(src="/assets/plugins/custom/datatables/datatables.bundle.js" type="text/javascript")
+    script(
+      src="/assets/plugins/global/plugins.bundle.js"
+      type="text/javascript"
+    )
+    script(
+      src="/assets/js/scripts.bundle.js"
+      type="text/javascript"
+    )
+    script(
+      src="/assets/plugins/custom/datatables/datatables.bundle.js"
+      type="text/javascript"
+    )
     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
-
-    script(src="/rpanel/js/footwear/su/parties-ui.js" type="text/javascript")
+    script(
+      src="/rpanel/js/footwear/su/parties-ui.js"
+      type="text/javascript"
+    )

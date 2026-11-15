@@ -1,101 +1,288 @@
 const mongoose = require("mongoose");
 const Party = require("../../models/footwears/Party");
 
-const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
-const up = (s) => String(s || "").trim().toUpperCase();
-
 const PARTY_TYPES = ["SUPPLIER", "CUSTOMER", "BOTH"];
+const OWNERSHIP_TYPES = ["INDEPENDENT_BUYER", "OWNED_OUTLET"];
 
-const normalizeBoolean = (value, defaultValue = true) => {
-  if (value === undefined || value === null || value === "") return defaultValue;
-  if (typeof value === "boolean") return value;
-  return String(value).toLowerCase() === "true";
-};
+const has = (object, key) =>
+  Object.prototype.hasOwnProperty.call(object, key);
+
+const up = (value) => String(value ?? "").trim().toUpperCase();
+const text = (value) => String(value ?? "").trim();
+
+const isValidObjectId = (value) =>
+  typeof value === "string" &&
+  /^[a-f\d]{24}$/i.test(value) &&
+  mongoose.Types.ObjectId.isValid(value);
+
+function badRequest(message) {
+  const error = new Error(message);
+  error.status = 400;
+  return error;
+}
+
+function normalizeBoolean(value, field) {
+  if (value === true || value === "true") return true;
+  if (value === false || value === "false") return false;
+
+  throw badRequest(`${field} must be true or false`);
+}
+
+function normalizeEnum(value, allowed, field) {
+  const normalized = up(value);
+
+  if (!allowed.includes(normalized)) {
+    throw badRequest(`${field} must be ${allowed.join(", ")}`);
+  }
+
+  return normalized;
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function sendError(res, error, message) {
+  if (error.status === 400) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+
+  if (error.name === "ValidationError") {
+    return res.status(400).json({
+      ok: false,
+      message: "Party validation failed",
+      errors: Object.values(error.errors).map((item) => item.message),
+    });
+  }
+
+  if (error.code === 11000) {
+    return res.status(409).json({
+      ok: false,
+      message: "A record with this unique value already exists",
+    });
+  }
+
+  console.error(message, error);
+
+  return res.status(500).json({
+    ok: false,
+    message,
+  });
+}
+
+function applyPartyFields(party, body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    throw badRequest("A JSON object is required");
+  }
+
+  // Workspace links must be assigned by the dedicated
+  // provisioning workflow, not by general party editing.
+  if (has(body, "businessId")) {
+    throw badRequest(
+      "businessId must be assigned through workspace provisioning"
+    );
+  }
+
+  if (has(body, "name")) {
+    const name = up(body.name);
+
+    if (!name) {
+      throw badRequest("Party name required");
+    }
+
+    party.name = name;
+  }
+
+  const textFields = [
+    "phone",
+    "whatsapp",
+    "address",
+    "notes",
+  ];
+
+  for (const field of textFields) {
+    if (has(body, field)) {
+      party[field] = text(body[field]);
+    }
+  }
+
+  for (const field of ["city", "area", "gstin"]) {
+    if (has(body, field)) {
+      party[field] = up(body[field]);
+    }
+  }
+
+  if (has(body, "partyType")) {
+    party.partyType = normalizeEnum(
+      body.partyType,
+      PARTY_TYPES,
+      "partyType"
+    );
+  }
+
+  if (has(body, "ownershipType")) {
+    party.ownershipType = normalizeEnum(
+      body.ownershipType,
+      OWNERSHIP_TYPES,
+      "ownershipType"
+    );
+  }
+
+  if (has(body, "isActive")) {
+    party.isActive = normalizeBoolean(body.isActive, "isActive");
+  }
+
+  if (has(body, "posEnabled")) {
+    party.posEnabled = normalizeBoolean(body.posEnabled, "posEnabled");
+  }
+
+  // Deactivating a party or changing it to supplier-only
+  // also disables its POS setting.
+  const isBuyer =
+    party.partyType === "CUSTOMER" || party.partyType === "BOTH";
+
+  if (!party.isActive || !isBuyer) {
+    if (has(body, "posEnabled") && party.posEnabled) {
+      throw badRequest(
+        "POS can only be enabled for an active CUSTOMER or BOTH party"
+      );
+    }
+
+    party.posEnabled = false;
+  }
+
+  // Accounting balances, publicLedgerToken, businessId,
+  // and sales/payment totals are intentionally not editable here.
+}
 
 exports.create = async (req, res) => {
   try {
-    const name = up(req.body.name);
-    const phone = String(req.body.phone || "").trim();
-    const partyType = up(req.body.partyType || "CUSTOMER");
-    const address = String(req.body.address || "").trim();
-    const gstin = up(req.body.gstin || "");
+    const party = new Party();
 
-    if (!name) {
-      return res.status(400).json({
-        ok: false,
-        message: "Party name required",
-      });
+    applyPartyFields(party, req.body);
+
+    if (!party.name) {
+      throw badRequest("Party name required");
     }
 
-    if (!PARTY_TYPES.includes(partyType)) {
-      return res.status(400).json({
-        ok: false,
-        message: "partyType must be SUPPLIER, CUSTOMER, or BOTH",
-      });
-    }
+    await party.save();
 
-    const party = await Party.create({
-      name,
-      phone,
-      partyType,
-      address,
-      gstin,
-      isActive: true,
+    return res.status(201).json({
+      ok: true,
+      data: party,
     });
-
-    return res.status(201).json({ ok: true, data: party });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to create party",
-      error: err.message,
-    });
+  } catch (error) {
+    return sendError(res, error, "Failed to create party");
   }
 };
 
 exports.list = async (req, res) => {
   try {
-    const {
-      q,
-      partyType,
-      isActive = "true",
-      limit = 100,
-    } = req.query;
+    const filter = {};
 
-    const filter = {
-      isActive: normalizeBoolean(isActive, true),
-    };
+    // Preserve your current default: list active parties.
+    filter.isActive =
+      req.query.isActive === undefined
+        ? true
+        : normalizeBoolean(req.query.isActive, "isActive");
 
-    if (partyType) {
-      const normalizedPartyType = up(partyType);
-
-      if (!PARTY_TYPES.includes(normalizedPartyType)) {
-        return res.status(400).json({
-          ok: false,
-          message: "partyType must be SUPPLIER, CUSTOMER, or BOTH",
-        });
-      }
-
-      filter.partyType = normalizedPartyType;
+    if (req.query.partyType !== undefined) {
+      filter.partyType = normalizeEnum(
+        req.query.partyType,
+        PARTY_TYPES,
+        "partyType"
+      );
     }
 
-    if (q && String(q).trim()) {
-      const rx = new RegExp(String(q).trim(), "i");
-      filter.$or = [{ name: rx }, { phone: rx }];
+    if (req.query.ownershipType !== undefined) {
+      const ownershipType = normalizeEnum(
+        req.query.ownershipType,
+        OWNERSHIP_TYPES,
+        "ownershipType"
+      );
+
+      // Older records may not contain the new field yet.
+      filter.$and = [
+        ownershipType === "INDEPENDENT_BUYER"
+          ? {
+              $or: [
+                { ownershipType: "INDEPENDENT_BUYER" },
+                { ownershipType: { $exists: false } },
+              ],
+            }
+          : { ownershipType },
+      ];
+    }
+
+    if (req.query.posEnabled !== undefined) {
+      const enabled = normalizeBoolean(
+        req.query.posEnabled,
+        "posEnabled"
+      );
+
+      // Missing fields on older records mean POS is disabled.
+      if (enabled) {
+        filter.posEnabled = true;
+      } else {
+        filter.$and = filter.$and || [];
+        filter.$and.push({
+          $or: [
+            { posEnabled: false },
+            { posEnabled: { $exists: false } },
+          ],
+        });
+      }
+    }
+
+    if (req.query.q !== undefined) {
+      if (typeof req.query.q !== "string") {
+        throw badRequest("q must be a string");
+      }
+
+      const query = req.query.q.trim();
+
+      if (query.length > 100) {
+        throw badRequest("Search text must be 100 characters or fewer");
+      }
+
+      if (query) {
+        const rx = new RegExp(escapeRegex(query), "i");
+
+        filter.$or = [
+          { name: rx },
+          { phone: rx },
+        ];
+      }
+    }
+
+    const requestedLimit =
+      req.query.limit === undefined ? 100 : Number(req.query.limit);
+
+    if (!Number.isInteger(requestedLimit) || requestedLimit < 1) {
+      throw badRequest("limit must be a positive integer");
     }
 
     const items = await Party.find(filter)
-      .sort({ name: 1 })
-      .limit(Math.min(Number(limit) || 50, 200))
+      .sort({ name: 1, _id: 1 })
+      .limit(Math.min(requestedLimit, 200))
       .lean();
 
-    return res.json({ ok: true, data: items });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to list parties",
-      error: err.message,
+    // Provide consistent defaults for records created before this update.
+    const data = items.map((party) => ({
+      ...party,
+      ownershipType: party.ownershipType || "INDEPENDENT_BUYER",
+      posEnabled: party.posEnabled === true,
+    }));
+
+    return res.json({
+      ok: true,
+      data,
     });
+  } catch (error) {
+    return sendError(res, error, "Failed to list parties");
   }
 };
 
@@ -104,10 +291,7 @@ exports.getById = async (req, res) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-      return res.status(400).json({
-        ok: false,
-        message: "Invalid party id",
-      });
+      throw badRequest("Invalid party id");
     }
 
     const party = await Party.findById(id).lean();
@@ -119,13 +303,16 @@ exports.getById = async (req, res) => {
       });
     }
 
-    return res.json({ ok: true, data: party });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to get party",
-      error: err.message,
+    return res.json({
+      ok: true,
+      data: {
+        ...party,
+        ownershipType: party.ownershipType || "INDEPENDENT_BUYER",
+        posEnabled: party.posEnabled === true,
+      },
     });
+  } catch (error) {
+    return sendError(res, error, "Failed to get party");
   }
 };
 
@@ -134,10 +321,7 @@ exports.update = async (req, res) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-      return res.status(400).json({
-        ok: false,
-        message: "Invalid party id",
-      });
+      throw badRequest("Invalid party id");
     }
 
     const party = await Party.findById(id);
@@ -149,55 +333,16 @@ exports.update = async (req, res) => {
       });
     }
 
-    if (req.body.name !== undefined) {
-      const name = up(req.body.name);
-      if (!name) {
-        return res.status(400).json({
-          ok: false,
-          message: "Party name required",
-        });
-      }
-      party.name = name;
-    }
-
-    if (req.body.phone !== undefined) {
-      party.phone = String(req.body.phone || "").trim();
-    }
-
-    if (req.body.partyType !== undefined) {
-      const partyType = up(req.body.partyType);
-
-      if (!PARTY_TYPES.includes(partyType)) {
-        return res.status(400).json({
-          ok: false,
-          message: "partyType must be SUPPLIER, CUSTOMER, or BOTH",
-        });
-      }
-
-      party.partyType = partyType;
-    }
-
-    if (req.body.address !== undefined) {
-      party.address = String(req.body.address || "").trim();
-    }
-
-    if (req.body.gstin !== undefined) {
-      party.gstin = up(req.body.gstin || "");
-    }
-
-    if (req.body.isActive !== undefined) {
-      party.isActive = normalizeBoolean(req.body.isActive, party.isActive);
-    }
+    applyPartyFields(party, req.body);
 
     await party.save();
 
-    return res.json({ ok: true, data: party });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to update party",
-      error: err.message,
+    return res.json({
+      ok: true,
+      data: party,
     });
+  } catch (error) {
+    return sendError(res, error, "Failed to update party");
   }
 };
 
@@ -206,10 +351,7 @@ exports.remove = async (req, res) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-      return res.status(400).json({
-        ok: false,
-        message: "Invalid party id",
-      });
+      throw badRequest("Invalid party id");
     }
 
     const party = await Party.findById(id);
@@ -222,17 +364,15 @@ exports.remove = async (req, res) => {
     }
 
     party.isActive = false;
+    party.posEnabled = false;
+
     await party.save();
 
     return res.json({
       ok: true,
-      message: "Party deactivated",
+      message: "Party deactivated and POS disabled",
     });
-  } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      message: "Failed to remove party",
-      error: err.message,
-    });
+  } catch (error) {
+    return sendError(res, error, "Failed to remove party");
   }
 };

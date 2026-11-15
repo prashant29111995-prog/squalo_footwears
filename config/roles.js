@@ -118,6 +118,13 @@ exports.roles = (function () {
     .readAny('clientview')
     .createOwn('clientTask')
     .readOwn('clientOrder');
+    // Central administration of parties, stores and workspaces.
+  
+  ac.grant("SuperAdmin")
+    .readAny("footwearAdministration")
+    .createAny("footwearAdministration")
+    .updateAny("footwearAdministration")
+    .deleteAny("footwearAdministration");
 
   return ac;
 })();

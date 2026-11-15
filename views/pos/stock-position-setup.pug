@@ -1,0 +1,104 @@
+extends ./layout.pug
+
+block styles
+  style.
+    input, select {
+      max-width: 100%;
+      padding: 10px;
+      border: 1px solid #ccd5e2;
+      border-radius: 7px;
+      font: inherit;
+    }
+    .setup-field {
+      margin-bottom: 16px;
+    }
+    .setup-field > select {
+      width: 100%;
+    }
+    .allocation-table input {
+      width: 95px;
+    }
+    .allocation-table select {
+      min-width: 110px;
+    }
+    .setup-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .balance {
+      margin: 18px 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+block content
+  .toolbar
+    div
+      h1 Stock Position Setup
+      p.muted #{store.code} — #{store.name}
+
+    a(href="/pos/dashboard?storeId=" + String(store._id)) Back to Dashboard
+
+  .notice.warning
+    | First allocation pauses legacy stock-writing workflows.
+    |  Stop existing stock operations before verifying.
+    |  This allocates existing stock; it does not add stock.
+
+  section.card.section
+    h2 1. Classify Locations
+
+    .table-wrap
+      table
+        thead
+          tr
+            th Location
+            th Type
+            th Action
+        tbody#setupLocations
+
+  section.card.section
+    h2 2. Select Existing Stock
+
+    .setup-field
+      label(for="batchSearch") Find Article or Colour
+      input#batchSearch(
+        type="search"
+        placeholder="Search article, brand or colour"
+      )
+
+    .setup-field
+      label(for="setupBatch") Stock Batch
+      select#setupBatch
+        option(value="") Loading stock...
+
+    p#batchInfo.muted
+    .balance#countSummary Select a batch.
+
+    h2 3. Enter Counted Sizes and Racks
+
+    form#allocationForm
+      .table-wrap
+        table.allocation-table
+          thead
+            tr
+              th Size
+              th System
+              th Condition
+              th Source Rack
+              th Pairs
+              th
+          tbody#allocationRows
+
+      .setup-actions
+        button#addAllocationRow(type="button" disabled) Add Size / Rack
+        button#verifyAllocation.primary(type="submit" disabled) Verify Allocation
+        button#reloadSetup(type="button") Reload
+
+    p#setupMessage(role="status" aria-live="polite")
+
+  #stockSetupContext(data-store-id=String(store._id))
+
+block scripts
+  script(src="/rpanel/js/footwear/pos/stock-position-setup.js")

@@ -15,7 +15,20 @@ const partyPaymentRoutes = require("./partyPayment.routes");
 const articleMediaRoutes = require("./articleMedia.routes");
 
 const router = express.Router();
+const legacyStockWriteGuard = require(
+  "../../middleware/legacy-stock-write-guard"
+);
 
+router.use(
+  [
+    "/bills",
+    "/stockin",
+    "/stock-ledger",
+    "/audits",
+    "/assembly",
+  ],
+  legacyStockWriteGuard
+);
 // Versioned API root
 router.use("/stores", storeRoutes);
 router.use("/articles", articleRoutes);
@@ -30,5 +43,6 @@ router.use("/bills", billRoutes);
 router.use("/assembly", assemblyRoutes);
 router.use("/stockin", stockinRoutes);
 router.use("/article-media", articleMediaRoutes);
+router.use("/businesses", require("./business.routes"));
 
 module.exports = router;

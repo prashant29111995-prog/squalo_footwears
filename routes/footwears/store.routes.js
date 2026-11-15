@@ -1,22 +1,46 @@
 const express = require("express");
+
 const router = express.Router();
 
-// TODO: replace with your controller imports
-const storeController = require("../../controller/footwears/store.controller");
+const storeController = require(
+  "../../controller/footwears/store.controller"
+);
 
-// Placeholder controller handlers
-// const storeController = {
-//  create: (req, res) => res.json({ ok: true, action: "create store" }),
-//  list: (req, res) => res.json({ ok: true, action: "list stores" }),
-//  getById: (req, res) => res.json({ ok: true, action: "get store", id: req.params.id }),
-//  update: (req, res) => res.json({ ok: true, action: "update store", id: req.params.id }),
-//  remove: (req, res) => res.json({ ok: true, action: "delete store", id: req.params.id }),
-//};
+const {
+  checkApiAuth,
+  requireFootwearAdmin,
+} = require("../../middleware/check-auth");
 
-router.post("/", storeController.create);
-router.get("/", storeController.list);
-router.get("/:id", storeController.getById);
-router.patch("/:id", storeController.update);
-router.patch("/:id", storeController.remove);
+router.use(checkApiAuth);
+
+router.post(
+  "/",
+  requireFootwearAdmin("createAny"),
+  storeController.create
+);
+
+router.get(
+  "/",
+  requireFootwearAdmin("readAny"),
+  storeController.list
+);
+
+router.get(
+  "/:id",
+  requireFootwearAdmin("readAny"),
+  storeController.getById
+);
+
+router.patch(
+  "/:id",
+  requireFootwearAdmin("updateAny"),
+  storeController.update
+);
+
+router.delete(
+  "/:id",
+  requireFootwearAdmin("deleteAny"),
+  storeController.remove
+);
 
 module.exports = router;

@@ -11,7 +11,17 @@ const StoreLocationSchema = new mongoose.Schema(
 
     name: { type: String, required: true, trim: true, uppercase: true }, // "BASEMENT"
     code: { type: String, trim: true, uppercase: true, default: "" },    // "B1" (optional)
-
+locationType: {
+  type: String,
+  enum: [
+    "FRONT",
+    "BASEMENT",
+    "RESERVE",
+    "QUARANTINE",
+    "OTHER",
+  ],
+  default: "OTHER",
+},
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

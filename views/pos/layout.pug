@@ -1,0 +1,307 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    )
+    title= pageTitle
+
+    style.
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f4f6fa;
+        color: #172b4d;
+        font-family: Arial, sans-serif;
+      }
+
+      .pos-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 28px;
+        background: #fff;
+        border-bottom: 1px solid #e4e9f1;
+      }
+
+      .pos-brand {
+        color: #4563e6;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 2px;
+      }
+
+      .pos-business {
+        margin-top: 6px;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .pos-user {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .pos-main {
+        max-width: 1280px;
+        margin: auto;
+        padding: 28px 20px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      h2 {
+        margin: 0 0 18px;
+        font-size: 19px;
+      }
+
+      h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      p {
+        line-height: 1.5;
+      }
+
+      .muted {
+        color: #66758c;
+        font-size: 14px;
+      }
+
+      .card {
+        padding: 22px;
+        border: 1px solid #e4e9f1;
+        border-radius: 14px;
+        background: #fff;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .metric-label {
+        margin-bottom: 14px;
+        color: #66758c;
+        font-size: 13px;
+      }
+
+      .metric-value {
+        margin-bottom: 8px;
+        font-size: 28px;
+        font-weight: 800;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .store-picker {
+        display: flex;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      select,
+      button {
+        min-height: 44px;
+        padding: 10px 14px;
+        border: 1px solid #ccd5e2;
+        border-radius: 8px;
+        font: inherit;
+      }
+
+      select {
+        max-width: 100%;
+        background: #fff;
+      }
+
+      button {
+        background: #fff;
+        color: #344054;
+        cursor: pointer;
+      }
+
+      button.primary {
+        border-color: #4563e6;
+        background: #4563e6;
+        color: #fff;
+      }
+
+      button:disabled {
+        opacity: .6;
+        cursor: wait;
+      }
+
+      a {
+        color: #3655d6;
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #b5c2ff;
+        outline-offset: 2px;
+      }
+
+      .notice {
+        margin-bottom: 22px;
+        padding: 15px 18px;
+        border: 1px solid #dbe4ff;
+        border-radius: 10px;
+        background: #edf2ff;
+        line-height: 1.5;
+      }
+
+      .warning {
+        border-color: #f0d89c;
+        background: #fff8e8;
+        color: #805600;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #f0f2f6;
+        color: #66758c;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 13px 10px;
+        border-bottom: 1px solid #edf0f5;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      th {
+        color: #66758c;
+        font-size: 12px;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .section {
+        margin-bottom: 24px;
+      }
+
+      .error {
+        color: #b42318;
+      }
+
+      @media (max-width: 600px) {
+        .pos-header {
+          align-items: flex-start;
+          padding: 16px;
+        }
+
+        .pos-user {
+          gap: 8px;
+          font-size: 12px;
+        }
+
+        .pos-main {
+          padding: 22px 14px;
+        }
+
+        .store-picker,
+        .store-picker > div,
+        .store-picker select {
+          width: 100%;
+        }
+      }
+
+    block styles
+
+  body
+    header.pos-header
+      div
+        .pos-brand SQUALO POS
+        .pos-business= businessName
+
+      .pos-user
+        span #{staffName} · #{role}
+        a(href="/pos/change-password") Password
+        button#posLogout(type="button") Sign Out
+
+    main.pos-main
+      p#posError.error(role="alert" aria-live="polite")
+      block content
+
+    script.
+      (function () {
+        const button = document.getElementById("posLogout");
+        const errorBox = document.getElementById("posError");
+
+        button.addEventListener("click", async function () {
+          button.disabled = true;
+          errorBox.textContent = "";
+
+          try {
+            const response = await fetch("/pos/logout", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              },
+              body: JSON.stringify({})
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.ok) {
+              throw new Error(result.message || "Could not sign out");
+            }
+
+            window.location.assign("/pos/login");
+          } catch (error) {
+            errorBox.textContent = error.message;
+            button.disabled = false;
+          }
+        });
+      })();
+
+    block scripts

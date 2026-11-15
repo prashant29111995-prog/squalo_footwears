@@ -4,7 +4,7 @@
 const mongoose = require("mongoose");
 
 const StockLedger = require("../../models/footwears/StockLedger");
-const Store = require("../../models/footwears/store");
+const Store = require("../../models/footwears/Store");
 const Article = require("../../models/footwears/Article");
 const StockInBillLine = require("../../models/footwears/StockInBillLine");
 const StockInBill = require("../../models/footwears/StockInBill");

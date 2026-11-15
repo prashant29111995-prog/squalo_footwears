@@ -1,0 +1,227 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title= pageTitle
+
+    style.
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: #f3f5f9;
+        color: #172b4d;
+        font-family: Arial, sans-serif;
+      }
+      .card {
+        width: 100%;
+        max-width: 440px;
+        padding: 32px;
+        background: #fff;
+        border: 1px solid #e3e8ef;
+        border-radius: 18px;
+        box-shadow: 0 16px 48px rgba(23,43,77,.07);
+      }
+      .brand { color: #4563e6; font-weight: 800; letter-spacing: 2px; }
+      h1 { margin: 20px 0 10px; font-size: 26px; }
+      p { color: #637189; line-height: 1.5; }
+      label { display: block; margin: 18px 0 7px; font-weight: 600; }
+      input {
+        width: 100%;
+        min-height: 46px;
+        padding: 12px;
+        border: 1px solid #ccd5e2;
+        border-radius: 8px;
+        font: inherit;
+      }
+      input:focus { outline: 2px solid #aebcff; border-color: #4563e6; }
+      button {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 24px;
+        padding: 12px;
+        border: 0;
+        border-radius: 8px;
+        background: #4563e6;
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:disabled { opacity: .65; cursor: wait; }
+      .error { color: #b42318; white-space: pre-wrap; }
+      .secondary { background: #edf0f7; color: #344054; margin-top: 10px; }
+
+  body
+    main.card
+      .brand SQUALO POS
+
+      if mode === "login"
+        h1 Staff sign in
+        p Enter the workspace code supplied by your administrator.
+
+        form#posAuthForm(data-mode="login")
+          label(for="workspaceCode") Workspace code
+          input#workspaceCode(
+            name="workspaceCode"
+            type="text"
+            required
+            maxlength="100"
+            autocomplete="off"
+          )
+
+          label(for="email") Email
+          input#email(
+            name="email"
+            type="email"
+            required
+            maxlength="254"
+            autocomplete="username"
+          )
+
+          label(for="password") Password
+          input#password(
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+          )
+
+          p#error.error(role="alert" aria-live="polite")
+          button#submitButton(type="submit") Sign In
+
+      else
+        h1 Set your password
+        p Choose at least 10 characters with a letter and a number.
+
+        form#posAuthForm(data-mode="password")
+          label(for="oldPassword") Current password
+          input#oldPassword(
+            name="oldPassword"
+            type="password"
+            required
+            autocomplete="current-password"
+          )
+
+          label(for="newPassword") New password
+          input#newPassword(
+            name="newPassword"
+            type="password"
+            required
+            minlength="10"
+            autocomplete="new-password"
+          )
+
+          label(for="confirmPassword") Confirm new password
+          input#confirmPassword(
+            name="confirmPassword"
+            type="password"
+            required
+            minlength="10"
+            autocomplete="new-password"
+          )
+
+          p#error.error(role="alert" aria-live="polite")
+          button#submitButton(type="submit") Save Password
+
+        button#logoutButton.secondary(type="button") Sign Out
+
+    script.
+      (function () {
+        const form = document.getElementById("posAuthForm");
+        const button = document.getElementById("submitButton");
+        const errorBox = document.getElementById("error");
+        let busy = false;
+
+        async function request(url, payload) {
+          const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const type = response.headers.get("content-type") || "";
+
+          if (response.redirected || !type.includes("application/json")) {
+            throw new Error("Session unavailable. Open /pos/login again.");
+          }
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(result.message || "Request failed");
+          }
+
+          return result;
+        }
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          if (busy || !form.reportValidity()) return;
+
+          const payload = Object.fromEntries(new FormData(form));
+          const passwordMode = form.dataset.mode === "password";
+
+          errorBox.textContent = "";
+
+          if (
+            passwordMode &&
+            payload.newPassword !== payload.confirmPassword
+          ) {
+            errorBox.textContent = "New passwords do not match.";
+            return;
+          }
+
+          busy = true;
+          button.disabled = true;
+          const label = button.textContent;
+          button.textContent = "Please wait...";
+
+          try {
+            const result = await request(
+              passwordMode ? "/pos/change-password" : "/pos/login",
+              payload
+            );
+
+            const allowed = ["/pos/login", "/pos/change-password", "/pos/dashboard"];
+
+            if (!allowed.includes(result.redirectURL)) {
+              throw new Error("Invalid login destination");
+            }
+
+            window.location.assign(result.redirectURL);
+          } catch (error) {
+            errorBox.textContent = error.message;
+          } finally {
+            busy = false;
+            button.disabled = false;
+            button.textContent = label;
+          }
+        });
+
+        const logout = document.getElementById("logoutButton");
+
+        if (logout) {
+          logout.addEventListener("click", async function () {
+            if (busy) return;
+            logout.disabled = true;
+
+            try {
+              await request("/pos/logout", {});
+              window.location.assign("/pos/login");
+            } catch (error) {
+              errorBox.textContent = error.message;
+              logout.disabled = false;
+            }
+          });
+        }
+      })();

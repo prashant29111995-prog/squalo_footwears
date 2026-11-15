@@ -26,17 +26,20 @@ var UserSchema = new Schema(
       required: true,
     },
     user_type: {
-      type: String,
-      enum: ['Freelancer', 'Employee', 'Client'],
-      required: true,
-    },
+  type: String,
+  enum: ["Freelancer", "Employee", "Client", "PartyStaff"],
+  required: true,
+},
     is_active: {
       type: Boolean,
       default: true,
     },
     password: {
-      type: String,
-    },
+  type: String,
+  required: function () {
+    return this.user_type === "PartyStaff";
+  },
+},
     originalpass: {
       type: String,
     },
@@ -61,6 +64,29 @@ var UserSchema = new Schema(
         type: Date,
       },
     },
+    // Existing users retain access to their current portal.
+// PartyStaff accounts use the POS portal.
+portalAccess: {
+  type: String,
+  enum: ["LEGACY", "POS"],
+  default: function () {
+    return this.user_type === "PartyStaff" ? "POS" : "LEGACY";
+  },
+},
+
+// Enforced by the future POS login/password-change workflow.
+mustChangePassword: {
+  type: Boolean,
+  default: false,
+},
+
+// Future POS sessions will record this version.
+// Incrementing it will allow us to invalidate older sessions.
+authVersion: {
+  type: Number,
+  default: 0,
+  min: 0,
+},
     createdby: {
       ref: 'User',
       type: Schema.Types.ObjectId,
@@ -96,6 +122,24 @@ var UserSchema = new Schema(
     timestamps: true,
   }
 );
+UserSchema.pre("validate", function (next) {
+  if (this.user_type === "PartyStaff") {
+    if (this.portalAccess !== "POS") {
+      this.invalidate(
+        "portalAccess",
+        "Party staff accounts must use the POS portal"
+      );
+    }
 
+    if (this.employee && this.employee.user_role) {
+      this.invalidate(
+        "employee.user_role",
+        "Party staff roles must be assigned through BusinessMembership"
+      );
+    }
+  }
+
+  next();
+});
 // Export the modelname
 module.exports = mongoose.model('User', UserSchema);

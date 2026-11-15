@@ -1,0 +1,78 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title= pageTitle
+
+    style.
+      body {
+        margin: 0;
+        background: #f3f5f9;
+        color: #172b4d;
+        font-family: Arial, sans-serif;
+      }
+      main { max-width: 1000px; margin: auto; padding: 28px 20px; }
+      header { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+      h1 { margin-bottom: 8px; }
+      p { color: #637189; line-height: 1.5; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; }
+      .card { background: white; border: 1px solid #e3e8ef; border-radius: 12px; padding: 22px; }
+      .code { color: #4563e6; font-weight: 700; }
+      button { padding: 12px 18px; border: 1px solid #ccd5e2; border-radius: 8px; background: white; cursor: pointer; }
+      a { color: #4563e6; }
+      #error { color: #b42318; }
+
+  body
+    main
+      header
+        div
+          h1= businessName
+          p
+            | Signed in as #{staffName} · #{role}
+        button#logout(type="button") Sign Out
+
+      p#error(role="alert" aria-live="polite")
+
+      h2 Your Stores
+
+      if stores.length
+        .grid
+          each store in stores
+            article.card
+              .code= store.code
+              h3= store.name
+              p= store.type
+              p Store access is configured. Operational screens are the next step.
+      else
+        .card
+          h3 No active stores assigned
+          p Ask your administrator to link a store to this business and assign your access.
+
+      p
+        a(href="/pos/change-password") Change Password
+
+    script.
+      document.getElementById("logout").addEventListener("click", async function () {
+        const button = this;
+        button.disabled = true;
+
+        try {
+          const response = await fetch("/pos/logout", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            },
+            body: JSON.stringify({})
+          });
+
+          if (!response.ok) throw new Error("Could not sign out");
+
+          window.location.assign("/pos/login");
+        } catch (error) {
+          document.getElementById("error").textContent = error.message;
+          button.disabled = false;
+        }
+      });

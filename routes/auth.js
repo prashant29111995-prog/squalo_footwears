@@ -44,4 +44,6 @@ router.get('/logout', authController.get_user_logout);
 
 router.post('/logout', authController.post_user_logout);
 
+router.use("/pos", require("./footwears/pos"));
+
 module.exports = router;
